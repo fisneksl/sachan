@@ -1582,7 +1582,7 @@ function renderHome() {
         <div class="upcoming-dday" style="${r.isBooked===false ? 'color:var(--text3);' : ''}">${dday2}</div>
         <div class="upcoming-date">${r.date.slice(5)} (${dow[d2.getDay()]}) ${r.time}</div>
         ${seat2 ? `<div class="upcoming-seat">${seat2}</div>` : ''}
-        <div class="upcoming-cast">${r.alex} · ${r.philo}${r.isBooked===false ? ' <span style="font-size:10px;color:var(--text3);">미정</span>' : ''}</div>
+        <div class="upcoming-cast">${r.alex} · ${r.philo} · ${r.third||''}${r.isBooked===false ? ' <span style="font-size:10px;color:var(--text3);">미정</span>' : ''}</div>
       </div>`;
     }).join('');
   } else {
