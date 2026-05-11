@@ -162,6 +162,7 @@
   .cal-session-chip.booked .cs-time { color: var(--success); font-weight: 700; }
   .cal-session-chip.done .cs-time { color: var(--accent); font-weight: 700; }
   .cal-session-chip.done .cs-icon { color: var(--accent); font-size: 9px; font-weight: 900; }
+  .cal-session-chip.wonta .cs-time { color: #4A6FA5; font-weight: 700; }
   /* 캘린더 필터 */
   .cal-filter { margin-bottom: 10px; }
   .cal-filter-row { display: flex; align-items: center; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
@@ -1870,7 +1871,8 @@ function renderCalendar() {
             const key = `${ds}-${s.time}`;
             const isBooked = bookedSet.has(key);
             const isDone   = doneSet.has(key);
-            const chipCls  = isBooked ? 'cal-session-chip booked' : isDone ? 'cal-session-chip done' : 'cal-session-chip';
+            const hasWonta = s.third === '원태민';
+            const chipCls  = (isBooked ? 'cal-session-chip booked' : isDone ? 'cal-session-chip done' : 'cal-session-chip') + (hasWonta ? ' wonta' : '');
             const icon     = isDone ? '✅' : '';
             return `<div class="${chipCls}"><span class="cs-icon">${icon}</span><span class="cs-time">${s.time}</span></div>`;
           }).join('');
