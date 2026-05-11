@@ -1937,7 +1937,7 @@ function renderCalDayPanel(ds, daySch, doneSet, bookedSet, records) {
       const badge    = isBooked ? '<span class="cal-session-badge booked">✓ 예매확정</span>'
                      : isDone   ? '<span class="cal-session-badge done">✅</span>' : '';
       const btn      = recs.length === 0
-        ? `<button class="cal-session-add" onclick="openAddRecordFromSchedule('${ds}','${s.time}','${s.alex}','${s.philo}')">+ 기록</button>`
+        ? `<button class="cal-session-add" onclick="openAddRecordFromSchedule('${ds}','${s.time}','${s.alex}','${s.philo}','${s.third}')">+ 기록</button>`
         : recs.map((r,i) => `<button class="cal-session-add" onclick="openDetail('${r.id}')">${recs.length > 1 ? `상세${i+1}` : '상세'}</button>`).join('');
       html += `<div class="cal-session-row">
         <div class="cal-session-time">${s.time}</div>
@@ -1964,7 +1964,7 @@ function renderCalDayPanel(ds, daySch, doneSet, bookedSet, records) {
   document.getElementById('cal-day-records').innerHTML = html;
 }
 
-function openAddRecordFromSchedule(date, time, alex, philo) {
+function openAddRecordFromSchedule(date, time, alex, philo, third) {
   openAddRecord(date);
   setTimeout(() => {
     const timeEl = document.getElementById('rec-time');
@@ -1973,6 +1973,8 @@ function openAddRecordFromSchedule(date, time, alex, philo) {
     if (skyEl) { skyEl.value = alex; skyEl.dispatchEvent(new Event('change')); }
     const philoEl = document.getElementById('rec-philo');
     if (philoEl) { philoEl.value = philo; philoEl.dispatchEvent(new Event('change')); }
+    const thirdEl = document.getElementById('rec-third');
+    if (thirdEl) { thirdEl.value = third||''; }
   }, 0);
 }
 
