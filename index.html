@@ -1945,7 +1945,7 @@ function renderCalDayPanel(ds, daySch, doneSet, bookedSet, records) {
         : recs.map((r,i) => `<button class="cal-session-add" onclick="openDetail('${r.id}')">${recs.length > 1 ? `상세${i+1}` : '상세'}</button>`).join('');
       html += `<div class="cal-session-row">
         <div class="cal-session-time">${s.time}</div>
-        <div class="cal-session-casting"><span class="sky">${s.alex}</span> · <span class="philo">${s.philo}</span> · <span class="third">${s.third}</span></div>
+        <div class="cal-session-casting"><span class="sky">${s.alex}</span> · <span class="philo">${s.philo}</span> · <span class="${s.third === '원태민' ? 'third' : 'philo'}">${s.third}</span></div>
         ${badge}${btn}
       </div>`;
     });
@@ -1953,7 +1953,7 @@ function renderCalDayPanel(ds, daySch, doneSet, bookedSet, records) {
     dayRecords.sort((a,b)=>a.time.localeCompare(b.time)).forEach(r => {
       html += `<div class="cal-session-row">
         <div class="cal-session-time">${r.time}</div>
-        <div class="cal-session-casting"><span class="sky">${r.alex}</span> · <span class="philo">${r.philo}</span> · <span class="third">${r.third}</span></div>
+        <div class="cal-session-casting"><span class="sky">${r.alex}</span> · <span class="philo">${r.philo}</span> · <span class="${r.third === '원태민' ? 'third' : 'philo'}">${r.third}</span></div>
         <span class="cal-session-badge done">✅</span>
         <button class="cal-session-add" onclick="openDetail('${r.id}')">상세</button>
       </div>`;
