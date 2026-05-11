@@ -985,7 +985,7 @@ function migrateStampBoards(boards) {
   return boards.map(b => {
     if (!b.milestones) {
       b.milestones = [
-        { at: 3, reward: '40% 할인권 ×2', couponKey: 'discount40', qty: 2, notified: b.currentCount >= 3 },
+        { at: 3, reward: '40% 할인권 ×2', couponKey: null, qty: 2, notified: b.currentCount >= 3 },
         { at: 5, reward: '📸 폴라로이드', couponKey: null, notified: b.currentCount >= 5 },
         { at: 7, reward: '50% 할인권 + 실황 OST', couponKey: 'discount50', qty: 1, notified: b.currentCount >= 7 }
       ];
@@ -1319,7 +1319,7 @@ function saveRecord() {
 
             // 마일스톤 달성 시 notified 설정 (쿠폰 count는 calcCouponCount()가 m.notified로 동적 계산)
             if (!newBoard.milestones) newBoard.milestones = [
-              { at:3, reward:'40% 할인권 ×2', couponKey:'discount40', qty:2, notified:false },
+              { at:3, reward:'40% 할인권 ×2', couponKey:null, qty:2, notified:false },
               { at:5, reward:'📸 폴라로이드', couponKey:null, notified:false },
               { at:7, reward:'50% 할인권 + 실황 OST', couponKey:'discount50', qty:1, notified:false }
             ];
@@ -2468,7 +2468,7 @@ function saveStampBoard() {
     totalSlots: 7,
     reward: '실황 OST',
     milestones: [
-      { at: 3, reward: '40% 할인권 ×2', couponKey: 'discount40', qty: 2, notified: false },
+      { at: 3, reward: '40% 할인권 ×2', couponKey: null, qty: 2, notified: false },
       { at: 5, reward: '📸 폴라로이드', couponKey: null, notified: false },
       { at: 7, reward: '50% 할인권 + 실황 OST', couponKey: 'discount50', qty: 1, notified: false }
     ],
@@ -2606,7 +2606,7 @@ function applyStampToBoard(boardId, qty, date, historyComment, comment) {
   recalcStampCount(board);
 
   if (!board.milestones) board.milestones = [
-    { at:3, reward:'40% 할인권 ×2', couponKey:'discount40', qty:2, notified:false },
+    { at:3, reward:'40% 할인권 ×2', couponKey:null, qty:2, notified:false },
     { at:5, reward:'📸 폴라로이드', couponKey:null, notified:false },
     { at:7, reward:'50% 할인권 + 실황 OST', couponKey:'discount50', qty:1, notified:false }
   ];
