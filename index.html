@@ -627,9 +627,6 @@
         </select>
       </div>
     </div>
-    <div class="form-row" style="flex-direction:column;">
-      
-    </div>
 <div class="form-group">
       <label class="form-label">김우진 *</label>
       <select class="form-control" id="rec-alex">
@@ -2113,7 +2110,8 @@ async function fetchSchedule(manual = false) {
     if (timeEl) timeEl.textContent = now;
     if (statusEl) statusEl.textContent = `✓ ${data.length}개 회차 로드됨`;
     if (manual) showToast(`스케줄 ${data.length}개 업데이트 완료`);
-    renderCalendar();
+    const activeId = document.querySelector('.page.active')?.id;
+    if (activeId === 'page-calendar') renderCalendar();
     renderHome();
   } catch (e) {
     // 오프라인이면 캐시된 스케줄 그대로 사용
