@@ -1850,7 +1850,8 @@ function renderCalendar() {
       const daySch = schByDate[ds] || [];
       const filteredDaySch = daySch.filter(s =>
         (!calFilterSky  || s.alex === calFilterSky) &&
-        (!calFilterDidi || s.philo   === calFilterDidi)
+        (!calFilterDidi || s.philo === calFilterDidi) &&
+        (!calFilterThird || s.third === calFilterThird)
       );
 
       let cls = 'cal-day';
