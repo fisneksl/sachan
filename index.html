@@ -654,20 +654,20 @@
           <option value="여은">여은</option>
           <option value="최연우">최연우</option>
           <option value="김수연">김수연</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">사내 *</label>
+        <select class="form-control" id="rec-third">
+          <option value="">선택</option>
           <option value="원태민">원태민</option>
           <option value="유현석">유현석</option>
           <option value="김지온">김지온</option>
           <option value="김찬종">김찬종</option>
-          <option value="정우연">정우연</option>
-          <option value="여은">여은</option>
-          <option value="최연우">최연우</option>
-          <option value="김수연">김수연</option>
-          <option value="원태민">원태민</option>
-          <option value="유현석">유현석</option>
-          <option value="김지온">김지온</option>
-          <option value="김찬종">김찬종</option>
-          <option value="정우연">정우연</option>
-          <option value="여은">여은</option>
+        </select>
+      </div>
           <option value="최연우">최연우</option>
           <option value="김수연">김수연</option>
           <option value="원태민">원태민</option>
@@ -1872,7 +1872,7 @@ function renderCalendar() {
             const isBooked = bookedSet.has(key);
             const isDone   = doneSet.has(key);
             const hasWonta = s.third === '원태민';
-            const chipCls  = (isBooked ? 'cal-session-chip booked' : isDone ? 'cal-session-chip done' : 'cal-session-chip') + (hasWonta ? ' wonta' : '');
+const chipCls  = (isBooked ? 'cal-session-chip booked' : isDone ? 'cal-session-chip done' : 'cal-session-chip') + (hasWonta ? ' wonta' : '');
             const icon     = isDone ? '✅' : '';
             return `<div class="${chipCls}"><span class="cs-icon">${icon}</span><span class="cs-time">${s.time}</span></div>`;
           }).join('');
@@ -1955,7 +1955,7 @@ function renderCalDayPanel(ds, daySch, doneSet, bookedSet, records) {
     dayRecords.sort((a,b)=>a.time.localeCompare(b.time)).forEach(r => {
       html += `<div class="cal-session-row">
         <div class="cal-session-time">${r.time}</div>
-        <div class="cal-session-casting"><span class="sky">${r.alex}</span> · <span class="philo">${r.philo}</span> · <span class="${r.third === '원태민' ? 'third' : 'philo'}">${r.third}</span></div>
+        <div class="cal-session-casting"><span class="sky">${r.alex}</span> · <span class="philo">${r.philo}</span> · <span class="third">${r.third}</span></div>
         <span class="cal-session-badge done">✅</span>
         <button class="cal-session-add" onclick="openDetail('${r.id}')">상세</button>
       </div>`;
