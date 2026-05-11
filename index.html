@@ -1555,7 +1555,7 @@ function renderHome() {
         <div class="next-show-date">${nextShow.date} (${dow[d.getDay()]}) ${nextShow.time}</div>
         <div class="next-show-casting">
           <span class="next-show-pill sky">김우진 ${nextShow.alex}</span>
-          <span class="next-show-pill philo">윤심덕 ${nextShow.philo}</span>
+          <span class="next-show-pill philo">윤심덕 ${nextShow.philo}</span>${nextShow.third ? `<span class="next-show-pill" style="background:rgba(150,180,220,0.35);">사내 ${nextShow.third}</span>` : ""}
         </div>
         ${seat ? `<div class="next-show-seat">${seat}</div>` : ''}
       </div>`;
