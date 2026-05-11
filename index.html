@@ -176,8 +176,10 @@
   .cal-session-casting { flex: 1; font-size: 13px; }
   .cal-session-casting .sky { color: #7A6050; font-weight: 600; }
   .cal-session-casting .philo { color: #8A7060; font-weight: 600; }
+  .cal-session-casting .third { color: #4A6FA5; font-weight: 600; }
   [data-theme="dark"] .cal-session-casting .sky { color: #C4966A; }
   [data-theme="dark"] .cal-session-casting .philo { color: #D4AF37; }
+  [data-theme="dark"] .cal-session-casting .third { color: #6A9FD5; }
   .cal-session-badge { font-size: 10px; padding: 2px 7px; border-radius: 8px; font-weight: 600; white-space: nowrap; }
   .cal-session-badge.done   { background: var(--accent-light); color: var(--accent); }
   .cal-session-badge.booked { background: #e6f9ee; color: var(--success); }
@@ -1943,7 +1945,7 @@ function renderCalDayPanel(ds, daySch, doneSet, bookedSet, records) {
         : recs.map((r,i) => `<button class="cal-session-add" onclick="openDetail('${r.id}')">${recs.length > 1 ? `상세${i+1}` : '상세'}</button>`).join('');
       html += `<div class="cal-session-row">
         <div class="cal-session-time">${s.time}</div>
-        <div class="cal-session-casting"><span class="sky">${s.alex}</span> · <span class="philo">${s.philo}</span></div>
+        <div class="cal-session-casting"><span class="sky">${s.alex}</span> · <span class="philo">${s.philo}</span> · <span class="third">${s.third}</span></div>
         ${badge}${btn}
       </div>`;
     });
@@ -1951,7 +1953,7 @@ function renderCalDayPanel(ds, daySch, doneSet, bookedSet, records) {
     dayRecords.sort((a,b)=>a.time.localeCompare(b.time)).forEach(r => {
       html += `<div class="cal-session-row">
         <div class="cal-session-time">${r.time}</div>
-        <div class="cal-session-casting"><span class="sky">${r.alex}</span> · <span class="philo">${r.philo}</span></div>
+        <div class="cal-session-casting"><span class="sky">${r.alex}</span> · <span class="philo">${r.philo}</span> · <span class="third">${r.third}</span></div>
         <span class="cal-session-badge done">✅</span>
         <button class="cal-session-add" onclick="openDetail('${r.id}')">상세</button>
       </div>`;
