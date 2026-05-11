@@ -1416,24 +1416,32 @@ function openDetail(id) {
 
 // 사의 찬미 좌석 구성: 행별 (left 석수, right 석수, left 시작번, right 시작번)
 const SEAT_ROWS = {
-  A:{ left:10, right:10, lStart:1, rStart:11 },
-  B:{ left:10, right:9,  lStart:1, rStart:11 },
-  C:{ left:10, right:10, lStart:1, rStart:11 },
-  D:{ left:10, right:9,  lStart:1, rStart:11 },
-  E:{ left:7,  right:10, lStart:1, rStart:8  },
-  F:{ left:7,  right:10, lStart:1, rStart:8  },
-  G:{ left:7,  right:10, lStart:1, rStart:8  },
-  H:{ left:9,  right:10, lStart:1, rStart:10 },
-  I:{ left:9,  right:10, lStart:1, rStart:10 },
-  J:{ left:9,  right:10, lStart:1, rStart:10 },
-  K:{ left:9,  right:9,  lStart:1, rStart:10 },
-  L:{ left:7,  right:0,  lStart:1, rStart:0  }
+  A:{ left:16, right:6,  lStart:1, rStart:17 },
+  B:{ left:16, right:7,  lStart:1, rStart:17 },
+  C:{ left:18, right:8,  lStart:1, rStart:19 },
+  D:{ left:18, right:8,  lStart:1, rStart:19 },
+  E:{ left:18, right:8,  lStart:1, rStart:19 },
+  F:{ left:18, right:8,  lStart:1, rStart:19 },
+  G:{ left:17, right:8,  lStart:1, rStart:18 },
+  H:{ left:18, right:8,  lStart:1, rStart:19 },
+  I:{ left:18, right:8,  lStart:1, rStart:19 },
+  J:{ left:18, right:8,  lStart:1, rStart:19 },
+  K:{ left:18, right:8,  lStart:1, rStart:19 },
+  L:{ left:18, right:8,  lStart:1, rStart:19 },
+  M:{ left:18, right:8,  lStart:1, rStart:19 },
+  N:{ left:17, right:8,  lStart:1, rStart:18 },
+  O:{ left:17, right:8,  lStart:1, rStart:18 },
+  P:{ left:18, right:8,  lStart:1, rStart:19 },
+  Q:{ left:18, right:8,  lStart:1, rStart:19 },
+  R:{ left:19, right:8,  lStart:1, rStart:20 },
+  S:{ left:8,  right:8,  lStart:1, rStart:9  }
 };
-const MAX_LEFT  = 10;
-const MAX_RIGHT = 10;
+const MAX_LEFT  = 19;
+const MAX_RIGHT = 8;
+
 
 function buildMiniSeat(zone, _row, num) {
-  const rowKeys = ['A','B','C','D',null,'E','F','G','H','I','J','K','L']; // null = aisle
+  const rowKeys = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S'];
   let html = '<div style="overflow-x:auto;margin:8px 0;display:flex;justify-content:center;"><div style="display:flex;flex-direction:column;gap:2px;width:max-content;">';
   rowKeys.forEach(r => {
     if (r === null) {
@@ -2047,7 +2055,7 @@ function renderHeatmap() {
     }
   });
   const cls = c => !c?'': c>=5?'v5':'v'+c;
-  const rowKeys = ['A','B','C','D',null,'E','F','G','H','I','J','K','L']; // null = aisle
+  const rowKeys = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S'];
   // cell=14px, gap=1px, label=20px
   const C = 14, GAP = 1, LBL = 20;
 
