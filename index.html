@@ -1420,7 +1420,7 @@ const SEAT_ROWS = {
   P:{ left:6,  mid:12, right:8,  lStart:1, mStart:7,  rStart:19 },
   Q:{ left:6,  mid:12, right:8,  lStart:1, mStart:7,  rStart:19 },
   R:{ left:1,  mid:18, right:8,  lStart:2, mStart:3,  rStart:20 },
-  S:{ left:0,  mid:8,  right:8,  lStart:0, mStart:1,  rStart:9  }
+
 };
 const MAX_LEFT  = 7;
 const MAX_MID   = 18;
@@ -1428,7 +1428,7 @@ const MAX_RIGHT = 8;
 
 
 function buildMiniSeat(zone, _row, num) {
-  const rowKeys = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S'];
+  const rowKeys = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q'];
   let html = '<div style="overflow-x:auto;margin:8px 0;display:flex;justify-content:center;"><div style="display:flex;flex-direction:column;gap:2px;width:max-content;">';
   rowKeys.forEach(r => {
     const cfg = SEAT_ROWS[r];
@@ -2056,7 +2056,7 @@ function renderHeatmap() {
     }
   });
   const cls = c => !c?'': c>=5?'v5':'v'+c;
-  const rowKeys = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S'];
+  const rowKeys = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q'];
   const C = 10, GAP = 1, LBL = 20, ZONE_GAP = 2;
 
   let html = '<div style="display:flex;flex-direction:column;gap:2px;">';
