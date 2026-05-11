@@ -2064,12 +2064,14 @@ function renderHeatmap() {
   let html = '<div style="display:flex;flex-direction:column;gap:2px;">';
 
   // header
-  const leftPad  = (MAX_LEFT * (C+GAP)) + ZONE_GAP;
+  const leftPad  = MAX_LEFT * (C+GAP);
   const midPad   = MAX_MID * (C+GAP);
   const rightPad = MAX_RIGHT * (C+GAP);
   html += `<div style="display:flex;align-items:center;margin-bottom:2px;gap:${GAP}px;">
     <div style="width:${leftPad}px;text-align:center;font-size:9px;color:var(--text3);">← 좌</div>
+    <div style="width:${ZONE_GAP}px;"></div>
     <div style="width:${midPad}px;text-align:center;font-size:9px;color:var(--text3);">중앙</div>
+    <div style="width:${ZONE_GAP}px;"></div>
     <div style="width:${LBL}px;"></div>
     <div style="width:${rightPad}px;text-align:center;font-size:9px;color:var(--text3);">우 →</div>
   </div>`;
@@ -2093,6 +2095,8 @@ function renderHeatmap() {
       const k = `${r}-${n}`, cnt = seatMap[k]||0, c = cls(cnt);
       html += `<div class="seat-cell${c?' '+c:''}" style="width:${C}px;height:${C}px;" title="${r}열 ${n}번 ${cnt}회"></div>`;
     }
+    // zone gap2
+    html += `<div style="width:${ZONE_GAP}px;flex-shrink:0;"></div>`;
     // zone gap2
     html += `<div style="width:${ZONE_GAP}px;flex-shrink:0;"></div>`;
     // row label
