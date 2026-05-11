@@ -431,18 +431,31 @@
       <span class="cal-filter-label">김우진</span>
       <div id="cal-chips-sky" style="display:flex;gap:6px;flex-wrap:wrap;">
         <button class="cal-chip active" data-name="" onclick="setCalFilterSky(null,this)">전체</button>
-        <button class="cal-chip" data-name="김우진" onclick="setCalFilterSky('김우진',this)">김우진</button>
-        <button class="cal-chip" data-name="김우진" onclick="setCalFilterSky('김우진',this)">김우진</button>
-        <button class="cal-chip" data-name="김우진" onclick="setCalFilterSky('김우진',this)">김우진</button>
+        <button class="cal-chip" data-name="온주완" onclick="setCalFilterSky('온주완',this)">온주완</button>
+        <button class="cal-chip" data-name="이진혁" onclick="setCalFilterSky('이진혁',this)">이진혁</button>
+        <button class="cal-chip" data-name="임준혁" onclick="setCalFilterSky('임준혁',this)">임준혁</button>
+        <button class="cal-chip" data-name="선한국" onclick="setCalFilterSky('선한국',this)">선한국</button>
       </div>
     </div>
-    <div class="cal-filter-row">
+    </div>
+   <div class="cal-filter-row">
       <span class="cal-filter-label">윤심덕</span>
       <div id="cal-chips-philo" style="display:flex;gap:6px;flex-wrap:wrap;">
         <button class="cal-chip active" data-name="" onclick="setCalFilterDidi(null,this)">전체</button>
-        <button class="cal-chip" data-name="윤심덕" onclick="setCalFilterDidi('윤심덕',this)">윤심덕</button>
-        <button class="cal-chip" data-name="윤심덕" onclick="setCalFilterDidi('윤심덕',this)">윤심덕</button>
-        <button class="cal-chip" data-name="윤심덕" onclick="setCalFilterDidi('윤심덕',this)">윤심덕</button>
+        <button class="cal-chip" data-name="정우연" onclick="setCalFilterDidi('정우연',this)">정우연</button>
+        <button class="cal-chip" data-name="여은" onclick="setCalFilterDidi('여은',this)">여은</button>
+        <button class="cal-chip" data-name="최연우" onclick="setCalFilterDidi('최연우',this)">최연우</button>
+        <button class="cal-chip" data-name="김수연" onclick="setCalFilterDidi('김수연',this)">김수연</button>
+      </div>
+    </div>
+        <div class="cal-filter-row">
+      <span class="cal-filter-label">사내</span>
+      <div id="cal-chips-third" style="display:flex;gap:6px;flex-wrap:wrap;">
+        <button class="cal-chip active" data-name="" onclick="setCalFilterThird(null,this)">전체</button>
+        <button class="cal-chip" data-name="원태민" onclick="setCalFilterThird('원태민',this)">원태민</button>
+        <button class="cal-chip" data-name="유현석" onclick="setCalFilterThird('유현석',this)">유현석</button>
+        <button class="cal-chip" data-name="김지온" onclick="setCalFilterThird('김지온',this)">김지온</button>
+        <button class="cal-chip" data-name="김찬종" onclick="setCalFilterThird('김찬종',this)">김찬종</button>
       </div>
     </div>
     <div id="cal-filter-hint" style="font-size:11px;color:var(--text3);padding:2px 0 4px;">배우를 선택하면 해당 회차가 표시됩니다</div>
@@ -1677,6 +1690,7 @@ function renderHome() {
 let calYear, calMonth;
 let calFilterSky  = null;
 let calFilterDidi = null;
+let calFilterThird = null;
 let calSelectedDs = null;
 
 function initCal() {
@@ -1694,6 +1708,13 @@ function calNext() { calMonth++; if(calMonth>11){calMonth=0;calYear++;} calSelec
 function setCalFilterSky(name, btn) {
   calFilterSky = name;
   document.querySelectorAll('#cal-chips-sky .cal-chip').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  updateCalFilterHint();
+  renderCalendar();
+}
+function setCalFilterThird(name, btn) {
+  calFilterThird = name;
+  document.querySelectorAll('#cal-chips-third .cal-chip').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   updateCalFilterHint();
   renderCalendar();
