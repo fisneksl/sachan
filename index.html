@@ -1632,9 +1632,8 @@ function renderHome() {
   const f50    = homeCouponFinal('discount50');
   const fPass  = homeCouponFinal('discountPass');
   const homeCouponItems = [
-    { key:'discount40',   label:'40% 할인권', cur:c40,   final:f40   },
-    { key:'discount50',   label:'50% 할인권', cur:c50,   final:f50   },
-    { key:'discountPass', label:'증빙패스',   cur:cPass, final:fPass  }
+    { key:'discount40',   label:'폴라로이드', cur:c40,   final:f40   },
+    { key:'discount50',   label:'실황 OST',   cur:c50,   final:f50   }
   ];
   document.getElementById('home-coupons').innerHTML =
     `<div class="coupon-cards">${homeCouponItems.map(item => {
