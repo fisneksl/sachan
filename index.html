@@ -2022,7 +2022,6 @@ let ah = `<tr><th colspan="3" class="role-section-title">김우진</th></tr><tr>
     ['선한국','정우연'],['선한국','여은'],['선한국','최연우'],['선한국','김수연']
   ];
   let ph = '<tr><th>김우진</th><th>윤심덕</th><th>총 회차</th><th>관람</th></tr>';
-  let ph = '<tr><th>김우진</th><th>윤심덕</th><th>총 회차</th><th>관람</th></tr>';
   pairs.forEach(([s,d]) => {
     const tot = schedule.filter(x=>x.alex===s&&x.philo===d).length;
     const seen = records.filter(r=>r.alex===s&&r.philo===d).length;
