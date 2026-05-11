@@ -1403,27 +1403,28 @@ function openDetail(id) {
 
 // 사의 찬미 좌석 구성: 행별 (left 석수, right 석수, left 시작번, right 시작번)
 const SEAT_ROWS = {
-  A:{ left:16, right:6,  lStart:1, rStart:17 },
-  B:{ left:16, right:7,  lStart:1, rStart:17 },
-  C:{ left:18, right:8,  lStart:1, rStart:19 },
-  D:{ left:18, right:8,  lStart:1, rStart:19 },
-  E:{ left:18, right:8,  lStart:1, rStart:19 },
-  F:{ left:18, right:8,  lStart:1, rStart:19 },
-  G:{ left:17, right:8,  lStart:1, rStart:18 },
-  H:{ left:18, right:8,  lStart:1, rStart:19 },
-  I:{ left:18, right:8,  lStart:1, rStart:19 },
-  J:{ left:18, right:8,  lStart:1, rStart:19 },
-  K:{ left:18, right:8,  lStart:1, rStart:19 },
-  L:{ left:18, right:8,  lStart:1, rStart:19 },
-  M:{ left:18, right:8,  lStart:1, rStart:19 },
-  N:{ left:17, right:8,  lStart:1, rStart:18 },
-  O:{ left:17, right:8,  lStart:1, rStart:18 },
-  P:{ left:18, right:8,  lStart:1, rStart:19 },
-  Q:{ left:18, right:8,  lStart:1, rStart:19 },
-  R:{ left:19, right:8,  lStart:1, rStart:20 },
-  S:{ left:8,  right:8,  lStart:1, rStart:9  }
+  A:{ left:4,  mid:12, right:6,  lStart:1, mStart:5,  rStart:17 },
+  B:{ left:4,  mid:12, right:7,  lStart:1, mStart:5,  rStart:17 },
+  C:{ left:6,  mid:12, right:8,  lStart:1, mStart:7,  rStart:19 },
+  D:{ left:6,  mid:12, right:8,  lStart:1, mStart:7,  rStart:19 },
+  E:{ left:6,  mid:12, right:8,  lStart:1, mStart:7,  rStart:19 },
+  F:{ left:6,  mid:12, right:8,  lStart:1, mStart:7,  rStart:19 },
+  G:{ left:5,  mid:12, right:8,  lStart:1, mStart:6,  rStart:18 },
+  H:{ left:6,  mid:12, right:8,  lStart:1, mStart:7,  rStart:19 },
+  I:{ left:6,  mid:12, right:8,  lStart:1, mStart:7,  rStart:19 },
+  J:{ left:6,  mid:12, right:8,  lStart:1, mStart:7,  rStart:19 },
+  K:{ left:6,  mid:12, right:8,  lStart:1, mStart:7,  rStart:19 },
+  L:{ left:6,  mid:12, right:8,  lStart:1, mStart:7,  rStart:19 },
+  M:{ left:6,  mid:12, right:8,  lStart:1, mStart:7,  rStart:19 },
+  N:{ left:5,  mid:12, right:8,  lStart:1, mStart:6,  rStart:18 },
+  O:{ left:5,  mid:12, right:8,  lStart:1, mStart:6,  rStart:18 },
+  P:{ left:6,  mid:12, right:8,  lStart:1, mStart:7,  rStart:19 },
+  Q:{ left:6,  mid:12, right:8,  lStart:1, mStart:7,  rStart:19 },
+  R:{ left:2,  mid:17, right:8,  lStart:1, mStart:3,  rStart:20 },
+  S:{ left:0,  mid:8,  right:8,  lStart:0, mStart:1,  rStart:9  }
 };
-const MAX_LEFT  = 19;
+const MAX_LEFT  = 6;
+const MAX_MID   = 17;
 const MAX_RIGHT = 8;
 
 
@@ -1431,10 +1432,6 @@ function buildMiniSeat(zone, _row, num) {
   const rowKeys = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S'];
   let html = '<div style="overflow-x:auto;margin:8px 0;display:flex;justify-content:center;"><div style="display:flex;flex-direction:column;gap:2px;width:max-content;">';
   rowKeys.forEach(r => {
-    if (r === null) {
-      html += '<div style="height:4px;"></div>'; // aisle gap between D and E
-      return;
-    }
     const cfg = SEAT_ROWS[r];
     const isTargetRow = r === zone;
     html += '<div style="display:flex;gap:2px;align-items:center;">';
@@ -1443,17 +1440,23 @@ function buildMiniSeat(zone, _row, num) {
     // left seats
     for (let n = cfg.lStart; n < cfg.lStart + cfg.left; n++) {
       const hl = isTargetRow && n === parseInt(num);
-      html += `<div style="width:10px;height:10px;border-radius:2px;flex-shrink:0;background:${hl ? 'var(--accent)' : 'var(--bg3)'};border:1px solid ${hl ? 'var(--accent)' : 'var(--border)'};${hl ? 'box-shadow:0 0 4px var(--accent);' : ''}"></div>`;
+      html += `<div style="width:10px;height:10px;border-radius:2px;flex-shrink:0;background:${hl?'var(--accent)':'var(--bg3)'};border:1px solid ${hl?'var(--accent)':'var(--border)'};${hl?'box-shadow:0 0 4px var(--accent);':''}"></div>`;
+    }
+    // gap
+    html += '<div style="width:4px;flex-shrink:0;"></div>';
+    // mid seats
+    for (let i = 0; i < MAX_MID - cfg.mid; i++) html += '<div style="width:10px;height:10px;visibility:hidden;flex-shrink:0;"></div>';
+    for (let n = cfg.mStart; n < cfg.mStart + cfg.mid; n++) {
+      const hl = isTargetRow && n === parseInt(num);
+      html += `<div style="width:10px;height:10px;border-radius:2px;flex-shrink:0;background:${hl?'var(--accent)':'var(--bg3)'};border:1px solid ${hl?'var(--accent)':'var(--border)'};${hl?'box-shadow:0 0 4px var(--accent);':''}"></div>`;
     }
     // row label
     html += `<div style="width:18px;font-size:9px;color:${isTargetRow?'var(--accent)':'var(--text3)'};text-align:center;font-weight:${isTargetRow?'700':'400'};flex-shrink:0;">${r}</div>`;
     // right seats
     for (let n = cfg.rStart; n < cfg.rStart + cfg.right; n++) {
       const hl = isTargetRow && n === parseInt(num);
-      html += `<div style="width:10px;height:10px;border-radius:2px;flex-shrink:0;background:${hl ? 'var(--accent)' : 'var(--bg3)'};border:1px solid ${hl ? 'var(--accent)' : 'var(--border)'};${hl ? 'box-shadow:0 0 4px var(--accent);' : ''}"></div>`;
+      html += `<div style="width:10px;height:10px;border-radius:2px;flex-shrink:0;background:${hl?'var(--accent)':'var(--bg3)'};border:1px solid ${hl?'var(--accent)':'var(--border)'};${hl?'box-shadow:0 0 4px var(--accent);':''}"></div>`;
     }
-    // right padding
-    for (let i = 0; i < MAX_RIGHT - cfg.right; i++) html += '<div style="width:10px;height:10px;visibility:hidden;flex-shrink:0;"></div>';
     html += '</div>';
   });
   return html + '</div></div>';
@@ -2043,33 +2046,37 @@ function renderHeatmap() {
   });
   const cls = c => !c?'': c>=5?'v5':'v'+c;
   const rowKeys = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S'];
-  // cell=14px, gap=1px, label=20px
-  const C = 14, GAP = 1, LBL = 20;
+  const C = 10, GAP = 1, LBL = 20, ZONE_GAP = 6;
 
   let html = '<div style="display:flex;flex-direction:column;gap:2px;">';
 
-  // header row
-  const leftPad  = MAX_LEFT * (C + GAP);
-  const rightPad = MAX_RIGHT * (C + GAP);
-  html += `<div style="display:flex;gap:${GAP}px;align-items:center;margin-bottom:2px;">
-    <div style="width:${leftPad}px;text-align:center;font-size:9px;color:var(--text3);">← 무대쪽</div>
+  // header
+  const leftPad  = (MAX_LEFT * (C+GAP)) + ZONE_GAP;
+  const midPad   = MAX_MID * (C+GAP);
+  const rightPad = MAX_RIGHT * (C+GAP);
+  html += `<div style="display:flex;align-items:center;margin-bottom:2px;gap:${GAP}px;">
+    <div style="width:${leftPad}px;text-align:center;font-size:9px;color:var(--text3);">← 좌</div>
+    <div style="width:${midPad}px;text-align:center;font-size:9px;color:var(--text3);">중앙</div>
     <div style="width:${LBL}px;"></div>
-    <div style="width:${rightPad}px;text-align:center;font-size:9px;color:var(--text3);">무대쪽 →</div>
+    <div style="width:${rightPad}px;text-align:center;font-size:9px;color:var(--text3);">우 →</div>
   </div>`;
 
   rowKeys.forEach(r => {
-    if (r === null) {
-      html += `<div style="height:6px;"></div>`; // aisle gap between D and E
-      return;
-    }
     const cfg = SEAT_ROWS[r];
     html += `<div style="display:flex;gap:${GAP}px;align-items:center;">`;
-    // left padding (invisible)
-    for (let i = 0; i < MAX_LEFT - cfg.left; i++) {
-      html += `<div class="seat-cell" style="visibility:hidden;width:${C}px;height:${C}px;"></div>`;
-    }
+    // left padding
+    for (let i = 0; i < MAX_LEFT - cfg.left; i++) html += `<div class="seat-cell" style="visibility:hidden;width:${C}px;height:${C}px;"></div>`;
     // left seats
     for (let n = cfg.lStart; n < cfg.lStart + cfg.left; n++) {
+      const k = `${r}-${n}`, cnt = seatMap[k]||0, c = cls(cnt);
+      html += `<div class="seat-cell${c?' '+c:''}" style="width:${C}px;height:${C}px;" title="${r}열 ${n}번 ${cnt}회"></div>`;
+    }
+    // zone gap
+    html += `<div style="width:${ZONE_GAP}px;flex-shrink:0;"></div>`;
+    // mid padding
+    for (let i = 0; i < MAX_MID - cfg.mid; i++) html += `<div class="seat-cell" style="visibility:hidden;width:${C}px;height:${C}px;"></div>`;
+    // mid seats
+    for (let n = cfg.mStart; n < cfg.mStart + cfg.mid; n++) {
       const k = `${r}-${n}`, cnt = seatMap[k]||0, c = cls(cnt);
       html += `<div class="seat-cell${c?' '+c:''}" style="width:${C}px;height:${C}px;" title="${r}열 ${n}번 ${cnt}회"></div>`;
     }
@@ -2079,10 +2086,6 @@ function renderHeatmap() {
     for (let n = cfg.rStart; n < cfg.rStart + cfg.right; n++) {
       const k = `${r}-${n}`, cnt = seatMap[k]||0, c = cls(cnt);
       html += `<div class="seat-cell${c?' '+c:''}" style="width:${C}px;height:${C}px;" title="${r}열 ${n}번 ${cnt}회"></div>`;
-    }
-    // right padding (invisible)
-    for (let i = 0; i < MAX_RIGHT - cfg.right; i++) {
-      html += `<div class="seat-cell" style="visibility:hidden;width:${C}px;height:${C}px;"></div>`;
     }
     html += '</div>';
   });
