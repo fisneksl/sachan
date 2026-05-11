@@ -1423,7 +1423,7 @@ const SEAT_ROWS = {
   S:{ left:0,  mid:8,  right:8,  lStart:0, mStart:1,  rStart:9  }
 };
 const MAX_LEFT  = 6;
-const MAX_MID   = 17;
+const MAX_MID   = 18;
 const MAX_RIGHT = 8;
 
 
@@ -2091,9 +2091,7 @@ function renderHeatmap() {
       const k = `${r}-${n}`, cnt = seatMap[k]||0, c = cls(cnt);
       html += `<div class="seat-cell${c?' '+c:''}" style="width:${C}px;height:${C}px;" title="${r}열 ${n}번 ${cnt}회"></div>`;
     }
-    // left label
-    html += `<div style="width:${LBL}px;text-align:center;font-size:9px;color:var(--text3);font-weight:700;flex-shrink:0;">${r}</div>`;
-    // right label
+    // row label
     html += `<div style="width:${LBL}px;text-align:center;font-size:9px;color:var(--text3);font-weight:700;flex-shrink:0;">${r}</div>`;
     // right seats
     for (let n = cfg.rStart; n < cfg.rStart + cfg.right; n++) {
