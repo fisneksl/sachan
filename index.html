@@ -2141,7 +2141,8 @@ async function fetchEvents(manual = false) {
     if (timeEl) timeEl.textContent = now;
     if (statusEl) statusEl.textContent = `✓ ${data.length}개 이벤트 로드됨`;
     if (manual) showToast(`이벤트 ${data.length}개 업데이트 완료`);
-    renderCalendar();
+    const activeIdEv = document.querySelector('.page.active')?.id;
+    if (activeIdEv === 'page-calendar') renderCalendar();
   } catch (e) {
     const cached = getEvents();
     const savedAt = localStorage.getItem('eventsUpdatedAt');
