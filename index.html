@@ -1109,11 +1109,12 @@ function autoFillCasting() {
     if (matches.length===1) {
       timeSelect.value = matches[0].time;
       document.getElementById('rec-alex').value = matches[0].alex||'';
+      document.getElementById('rec-third').value = matches[0].third||'';
       document.getElementById('rec-philo').value   = matches[0].philo||'';
     } else if (cur) {
       timeSelect.value = cur;
       const m = matches.find(s=>s.time===cur);
-      if (m) { document.getElementById('rec-alex').value=m.alex||''; document.getElementById('rec-philo').value=m.philo||''; }
+      if (m) { document.getElementById('rec-alex').value=m.alex||''; document.getElementById('rec-philo').value=m.philo||''; document.getElementById('rec-third').value=m.third||''; }
     }
   } else { resetTimeOptions(); }
 }
@@ -1122,7 +1123,7 @@ function onTimeChange() {
   const time = document.getElementById('rec-time').value;
   if (!date||!time) return;
   const m = getSchedule().find(s=>s.date===date&&s.time===time);
-  if (m) { document.getElementById('rec-alex').value=m.alex||''; document.getElementById('rec-philo').value=m.philo||''; }
+  if (m) { document.getElementById('rec-alex').value=m.alex||''; document.getElementById('rec-philo').value=m.philo||''; document.getElementById('rec-third').value=m.third||''; }
 }
 function resetTimeOptions() {
   document.getElementById('rec-time').innerHTML = `<option value="">선택</option><option value="14:00">14:00</option><option value="15:00">15:00</option><option value="16:00">16:00</option><option value="18:00">18:00</option><option value="19:00">19:00</option><option value="20:00">20:00</option>`;
@@ -1184,6 +1185,7 @@ function openAddRecord(date) {
   resetTimeOptions();
   document.getElementById('rec-time').value = '';
   document.getElementById('rec-alex').value = '';
+  document.getElementById('rec-third').value = '';
   document.getElementById('rec-philo').value = '';
   document.getElementById('rec-zone').value = '';
   document.getElementById('rec-num').value = '';
@@ -1211,6 +1213,7 @@ function editRecord(id) {
   autoFillCasting();
   document.getElementById('rec-time').value = r.time;
   document.getElementById('rec-alex').value = r.alex;
+  document.getElementById('rec-third').value = r.third||'';
   document.getElementById('rec-philo').value = r.philo;
   document.getElementById('rec-zone').value = r.seatZone||'';
   document.getElementById('rec-num').value = r.seatNumber||'';
@@ -1239,6 +1242,7 @@ function saveRecord() {
   const time   = document.getElementById('rec-time').value;
   const alex = document.getElementById('rec-alex').value;
   const philo   = document.getElementById('rec-philo').value;
+  const third   = document.getElementById('rec-third').value;
   if (!date||!time||!alex||!philo) { showToast('날짜, 시간, 캐스팅은 필수입니다'); return; }
 
   const records  = getRecords();
@@ -1272,7 +1276,7 @@ function saveRecord() {
 
   // 쿠폰 count는 records 기반 실시간 계산 — history에 기록하지 않음
   const record = {
-    id: editId||uuid(), date, time, alex, philo, isBooked,
+    id: editId||uuid(), date, time, alex, philo, third, isBooked,
     seatZone:     document.getElementById('rec-zone').value||null,
     seatRow:      null,
     seatNumber:   numVal!=='' ? parseInt(numVal) : null,
