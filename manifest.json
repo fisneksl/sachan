@@ -1,0 +1,12 @@
+{
+  "name": "🚢 사의 찬미 관극 다이어리",
+  "short_name": "사의 찬미",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f8f8f6",
+  "theme_color": "#A08878",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

@@ -1,0 +1,3046 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>🕊️ 사의 찬미 관극 다이어리</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#A08878">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="사의 찬미">
+<style>
+  :root {
+    --bg: #f8f8f6; --bg1: #ffffff; --bg2: #ffffff; --bg3: #f0f0ee;
+    --border: #e0e0dc; --text: #1a1a1a; --text1: #1a1a1a; --text2: #555550; --text3: #999990;
+    --accent: #A08878; --accent2: #7E6858; --accent-light: #F2EAE4;
+    --danger: #cc4444; --success: #2a8a4a; --star: #f0a020;
+    --seat1: #D8C4B4; --seat2: #C0A48C; --seat3: #A0806A; --seat4: #7A5848; --seat5: #503428;
+    --shadow: 0 2px 12px rgba(0,0,0,0.08); --radius: 12px; --tab-h: 64px;
+  }
+  [data-theme="dark"] {
+    --bg: #111118; --bg1: #1a1a24; --bg2: #1a1a24; --bg3: #22222e;
+    --border: #333340; --text: #f0f0f0; --text1: #f0f0f0; --text2: #aaaaaa; --text3: #666670;
+    --accent: #BCAA98; --accent2: #CCBAA8; --accent-light: #2A2318;
+    --danger: #ee6666; --success: #44aa66;
+    --shadow: 0 2px 12px rgba(0,0,0,0.4);
+    --seat1: #3C2E28; --seat2: #5C4038; --seat3: #7C5848; --seat4: #A07060; --seat5: #C89080;
+  }
+  [data-theme="dark"] .next-show-card { background: linear-gradient(135deg, #3C2C22 0%, #52403A 100%); color: #fff; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Apple SD Gothic Neo', sans-serif;
+    background: var(--bg); color: var(--text);
+    max-width: 480px; margin: 0 auto; min-height: 100vh;
+  }
+  #app { padding-bottom: calc(var(--tab-h) + env(safe-area-inset-bottom, 0px)); }
+
+  /* TAB BAR */
+  .tab-bar {
+    position: fixed; bottom: 0; left: 0;
+    width: 100%;
+    height: calc(var(--tab-h) + env(safe-area-inset-bottom, 0px));
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    padding-left: env(safe-area-inset-left, 0px);
+    padding-right: env(safe-area-inset-right, 0px);
+    background: var(--bg2); border-top: 1px solid var(--border);
+    display: flex; z-index: 100; box-sizing: border-box;
+  }
+  .tab-btn {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 3px;
+    background: none; border: none; cursor: pointer;
+    color: var(--text3); font-size: 10px; transition: color 0.2s;
+  }
+  .tab-btn.active { color: var(--accent); }
+  .tab-btn .icon { font-size: 20px; }
+
+  /* PAGES */
+  .page { display: none; padding: 16px 16px 8px; }
+  .page.active { display: block; }
+
+  /* HEADER */
+  .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+  .page-title { font-size: 22px; font-weight: 700; }
+
+  /* CARD */
+  .card {
+    background: var(--bg2); border-radius: var(--radius);
+    padding: 16px; margin-bottom: 12px;
+    box-shadow: var(--shadow); border: 1px solid var(--border);
+  }
+  .card-title { font-size: 13px; color: var(--text3); margin-bottom: 8px; font-weight: 500; }
+
+  /* BUTTONS */
+  .btn { padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; font-size: 14px; font-weight: 600; transition: opacity 0.2s; }
+  .btn:active { opacity: 0.7; }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-outline { background: none; border: 1.5px solid var(--border); color: var(--text); }
+  .btn-danger { background: var(--danger); color: #fff; }
+  .btn-sm { padding: 6px 14px; font-size: 12px; }
+  .btn-icon { width: 32px; height: 32px; border-radius: 8px; background: var(--bg3); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+
+  /* FORM */
+  .form-group { margin-bottom: 14px; }
+  .form-label { font-size: 12px; color: var(--text2); margin-bottom: 5px; display: block; font-weight: 500; }
+  .form-control {
+    width: 100%; padding: 10px 12px; border: 1.5px solid var(--border);
+    border-radius: 8px; background: var(--bg); color: var(--text);
+    font-size: 14px; outline: none; transition: border-color 0.2s;
+    box-sizing: border-box; -webkit-appearance: none; appearance: none;
+    font-family: inherit;
+  }
+  .form-control:focus { border-color: var(--accent); }
+  @supports (-webkit-touch-callout: none) {
+    input[type="date"].form-control { height: 44px; }
+    select.form-control { height: 44px; }
+  }
+  select.form-control {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23999' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+  }
+  @supports (-webkit-touch-callout: none) {
+    select.form-control { height: 44px; }
+  }
+  .form-row { display: flex; gap: 10px; }
+  .form-row .form-group { flex: 1; }
+  textarea.form-control { min-height: 80px; resize: vertical; }
+
+  /* STAR */
+  .star-group { display: flex; gap: 6px; }
+  .star-btn { font-size: 24px; background: none; border: none; cursor: pointer; transition: transform 0.1s; }
+  .star-btn:active { transform: scale(1.3); }
+
+  /* OVERLAY / PANEL */
+  .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; display: none; align-items: flex-end; justify-content: center; }
+  .overlay.open { display: flex; }
+  .panel { background: var(--bg2); border-radius: 20px 20px 0 0; width: 100%; max-width: 480px; max-height: 92vh; overflow-y: auto; padding: 20px 20px 40px; animation: slideUp 0.25s ease; }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .panel-handle { width: 40px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 20px; }
+  .panel-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; }
+
+  /* TOGGLE */
+  .toggle { width: 48px; height: 26px; background: var(--border); border-radius: 13px; position: relative; cursor: pointer; border: none; transition: background 0.2s; }
+  .toggle.on { background: var(--accent); }
+  .toggle::after { content: ''; position: absolute; width: 20px; height: 20px; background: white; border-radius: 50%; top: 3px; left: 3px; transition: transform 0.2s; }
+  .toggle.on::after { transform: translateX(22px); }
+
+  /* RECORD LIST */
+  .record-mini { display: flex; align-items: center; padding: 7px 0; border-bottom: 1px solid var(--border); cursor: pointer; gap: 10px; }
+  .record-mini:last-child { border-bottom: none; }
+  .record-date-badge { background: var(--accent-light); color: var(--accent); border-radius: 8px; padding: 3px 8px; font-size: 12px; font-weight: 600; min-width: 60px; text-align: center; }
+  .record-casting { font-size: 13px; font-weight: 500; flex: 1; }
+  .record-rating { color: var(--star); font-size: 12px; }
+
+  /* CALENDAR */
+  .cal-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .cal-month { font-size: 18px; font-weight: 700; }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+  .cal-dow { text-align: center; font-size: 11px; color: var(--text3); padding: 6px 0; font-weight: 600; }
+  .cal-week-wrap { position: relative; }
+  .cal-event-overlay { position: absolute; top: 0; left: 0; right: 0; pointer-events: none; z-index: 1; }
+  .cal-event-row { position: relative; height: 16px; margin-bottom: 1px; }
+  .cal-event-bar-full {
+    position: absolute; height: 14px; border-radius: 3px; top: 1px;
+    display: flex; align-items: center; padding: 0 4px;
+    font-size: 9px; font-weight: 600; color: #fff;
+    overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+  }
+  .cal-day { min-height: 42px; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start; padding: 4px 3px 3px; border-radius: 6px; cursor: pointer; position: relative; transition: background 0.15s; overflow: hidden; }
+  .cal-day:hover { background: var(--bg3); }
+  .cal-day.today { background: var(--accent-light); font-weight: 700; color: var(--accent); }
+  .cal-day.selected { outline: 2px solid var(--accent); }
+  .cal-day.empty { cursor: default; }
+  .cal-day.sun { color: #cc4444; }
+  .cal-day.sat { color: var(--accent); }
+  .cal-day-num { font-size: 12px; line-height: 1.3; font-weight: 500; width: 100%; text-align: center; }
+  .cal-session-chip { display: flex; align-items: center; gap: 2px; font-size: 9px; line-height: 1.4; width: 100%; margin-top: 2px; }
+  .cal-session-chip .cs-icon { font-size: 7px; flex-shrink: 0; }
+  .cal-session-chip .cs-time { color: var(--text2); flex-shrink: 0; font-weight: 600; }
+  .cal-session-chip.booked .cs-time { color: var(--success); font-weight: 700; }
+  .cal-session-chip.done .cs-time { color: var(--accent); font-weight: 700; }
+  .cal-session-chip.done .cs-icon { color: var(--accent); font-size: 9px; font-weight: 900; }
+  /* 캘린더 필터 */
+  .cal-filter { margin-bottom: 10px; }
+  .cal-filter-row { display: flex; align-items: center; gap: 6px; margin-bottom: 5px; flex-wrap: wrap; }
+  .cal-filter-label { font-size: 11px; color: var(--text3); font-weight: 600; min-width: 66px; text-align: right; flex-shrink: 0; }
+  .cal-chip { padding: 3px 9px; border-radius: 12px; font-size: 11px; border: 1px solid var(--border); background: var(--bg2); color: var(--text2); cursor: pointer; white-space: nowrap; }
+  .cal-chip.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  /* 날짜 클릭 패널 */
+  .cal-day-panel { background: var(--bg1); border-radius: var(--radius); border: 1px solid var(--border); margin-top: 8px; overflow: hidden; }
+  .cal-day-panel-title { font-size: 14px; font-weight: 700; padding: 12px 14px 8px; }
+  .cal-session-row { display: flex; align-items: center; gap: 8px; padding: 9px 14px; border-top: 1px solid var(--border); }
+  .cal-session-time { font-size: 12px; font-weight: 700; color: var(--text2); min-width: 36px; text-align: center; }
+  .cal-session-casting { flex: 1; font-size: 13px; }
+  .cal-session-casting .sky { color: #7A6050; font-weight: 600; }
+  .cal-session-casting .philo { color: #8A7060; font-weight: 600; }
+  [data-theme="dark"] .cal-session-casting .sky { color: #C4966A; }
+  [data-theme="dark"] .cal-session-casting .philo { color: #D4AF37; }
+  .cal-session-badge { font-size: 10px; padding: 2px 7px; border-radius: 8px; font-weight: 600; white-space: nowrap; }
+  .cal-session-badge.done   { background: var(--accent-light); color: var(--accent); }
+  .cal-session-badge.booked { background: #e6f9ee; color: var(--success); }
+  [data-theme="dark"] .cal-session-badge.booked { background: #1a3a26; }
+  .cal-session-add { font-size: 11px; padding: 4px 9px; border-radius: 7px; border: 1px solid var(--accent); color: var(--accent); background: none; cursor: pointer; white-space: nowrap; }
+
+  /* STATS */
+  .stats-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .stats-table th { text-align: left; color: var(--text3); font-weight: 500; padding: 6px 8px; border-bottom: 1px solid var(--border); }
+  .stats-table td { padding: 8px 8px; border-bottom: 1px solid var(--border); }
+  .stats-table td:last-child { text-align: right; font-weight: 700; color: var(--accent); }
+  .role-section-title { font-size: 12px; font-weight: 700; color: var(--text3); padding: 6px 8px 2px; }
+
+  /* HEATMAP */
+  .heatmap-scroll { overflow-x: auto; }
+  .heatmap-wrap { display: flex; gap: 4px; justify-content: center; padding: 8px 0; width: max-content; margin: 0 auto; }
+  .zone-wrap { display: flex; flex-direction: column; align-items: center; gap: 4px; flex-shrink: 0; }
+  .zone-label { font-size: 11px; font-weight: 700; color: var(--text3); }
+  .seat-grid { display: flex; flex-direction: column; gap: 2px; }
+  .seat-row { display: flex; gap: 1px; align-items: center; }
+  .row-label { font-size: 8px; color: var(--text3); width: 20px; flex-shrink: 0; text-align: right; white-space: nowrap; }
+  .seat-cell { width: 10px; height: 10px; border-radius: 2px; background: var(--bg3); border: 1px solid var(--border); transition: background 0.2s; flex-shrink: 0; }
+  .seat-cell.v1 { background: var(--seat1); border-color: var(--seat1); }
+  .seat-cell.v2 { background: var(--seat2); border-color: var(--seat2); }
+  .seat-cell.v3 { background: var(--seat3); border-color: var(--seat3); }
+  .seat-cell.v4 { background: var(--seat4); border-color: var(--seat4); }
+  .seat-cell.v5 { background: var(--seat5); border-color: var(--seat5); }
+  .heatmap-legend { display: flex; gap: 10px; justify-content: center; margin-top: 10px; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text2); }
+  .legend-dot { width: 14px; height: 14px; border-radius: 3px; }
+
+  /* MINI SEAT */
+  .mini-heatmap { display: flex; gap: 6px; justify-content: center; margin: 8px 0; overflow-x: auto; }
+  .mini-zone { display: flex; flex-direction: column; gap: 1px; align-items: center; }
+  .mini-zone-label { font-size: 9px; color: var(--text3); margin-bottom: 2px; }
+  .mini-seat-row { display: flex; gap: 1px; }
+  .mini-seat-cell { width: 10px; height: 10px; border-radius: 1px; background: var(--bg3); border: 1px solid var(--border); }
+  .mini-seat-cell.highlight { background: var(--accent); border-color: var(--accent); }
+
+  /* STATS MONEY BLUR */
+  .money-blur-wrap { transition: filter 0.3s; }
+  .money-blur-wrap.blurred { filter: blur(6px); user-select: none; pointer-events: none; }
+
+  /* SCHEDULE */
+  .schedule-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .schedule-table th { text-align: left; padding: 8px; border-bottom: 2px solid var(--border); color: var(--text3); font-weight: 600; font-size: 12px; }
+  .schedule-table td { padding: 9px 8px; border-bottom: 1px solid var(--border); }
+  .schedule-row.past { opacity: 0.45; }
+  .schedule-row.today-row { background: var(--accent-light); }
+  .time-badge { font-size: 11px; background: var(--bg3); padding: 2px 6px; border-radius: 4px; color: var(--text2); }
+  .actor-pill { display: inline-block; font-size: 12px; padding: 2px 8px; border-radius: 12px; font-weight: 500; }
+  .actor-pill.sky { background: #EDE6E0; color: #5A4838; }
+  .actor-pill.philo { background: #E8E2DC; color: #6A5848; }
+  [data-theme="dark"] .actor-pill.sky { background: #2A1A0A; color: #C4966A; }
+  [data-theme="dark"] .actor-pill.philo { background: #2A2008; color: #D4AF37; }
+
+  /* STAMP / COUPON */
+  .stamp-cards-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .stamp-board { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; transition: opacity 0.2s; }
+  .stamp-board.paused { opacity: 0.45; }
+  .stamp-board-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+  .stamp-board-name { font-weight: 700; font-size: 14px; flex: 1; min-width: 0; }
+  .stamp-board-menu { display: flex; gap: 3px; align-items: center; flex-shrink: 0; margin-left: 4px; }
+  .stamp-menu-btn { width: 24px; height: 24px; border-radius: 6px; background: var(--bg3); border: 1px solid var(--border); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--text2); line-height: 1; }
+  .stamp-menu-btn.danger { color: var(--danger); }
+  .stamp-progress-wrap { margin: 6px 0 4px; }
+  .stamp-count-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
+  .stamp-count-cur { font-size: 13px; font-weight: 700; color: var(--accent); }
+  .stamp-count-final { font-size: 11px; color: var(--text3); }
+  .progress-bar { width: 100%; height: 12px; background: var(--bg3); border-radius: 6px; overflow: visible; position: relative; }
+  .progress-fill { height: 100%; background: var(--accent); border-radius: 6px; transition: width 0.4s ease; }
+  .progress-marker { position: absolute; top: -3px; width: 2px; height: 18px; background: var(--star); border-radius: 1px; }
+  .stamp-status-row { font-size: 11px; margin-top: 5px; min-height: 16px; }
+  .stamp-status-mid  { color: #e06000; font-weight: 600; }
+  .stamp-status-done { color: var(--star); font-weight: 700; }
+  .stamp-status-next { color: var(--text3); }
+  .stamp-status-paused { color: var(--text3); font-style: italic; }
+  .stamp-actions { margin-top: 8px; display: flex; flex-direction: column; gap: 5px; }
+  .stamp-history-btn { width: 100%; padding: 6px; border-radius: 7px; background: var(--bg3); border: 1px solid var(--border); cursor: pointer; font-size: 12px; color: var(--text2); font-weight: 500; text-align: center; }
+
+  /* 쿠폰 가로 카드 */
+  .coupon-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .coupon-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 10px 6px; text-align: center; }
+  .coupon-card-label { font-size: 11px; color: var(--text2); font-weight: 600; height: 28px; display: flex; align-items: center; justify-content: center; line-height: 1.3; margin-bottom: 6px; }
+  .coupon-card-sub-row { display: flex; margin-bottom: 3px; }
+  .coupon-card-sub { flex: 1; font-size: 10px; color: var(--text3); text-align: center; }
+  .coupon-card-sub + .coupon-card-sub { border-left: 1px solid var(--border); }
+  .coupon-card-num-row { display: flex; }
+  .coupon-card-num { flex: 1; font-size: 22px; font-weight: 700; color: var(--success); line-height: 1; text-align: center; }
+  .coupon-card-num.final { color: var(--text3); font-size: 22px; border-left: 1px solid var(--border); }
+  /* 이력 표 */
+  .coupon-hist-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .coupon-hist-table th { padding: 5px 4px; border-bottom: 2px solid var(--border); color: var(--text2); font-weight: 600; text-align: center; }
+  .coupon-hist-table td { padding: 0 3px; height: 28px; border-bottom: 1px solid var(--border); text-align: center; vertical-align: middle; white-space: nowrap; }
+  .coupon-hist-table tr:last-child td { border-bottom: none; }
+  .hist-type-get  { color: var(--success); font-weight: 700; }
+  .hist-type-use  { color: var(--danger);  font-weight: 700; }
+  .hist-type-restore { color: var(--text2); font-weight: 600; }
+  .hist-delta-pos { color: var(--success); font-weight: 700; }
+  .hist-delta-neg { color: var(--danger);  font-weight: 700; }
+  .hist-del-btn { background: none; border: none; cursor: pointer; color: var(--danger); font-size: 11px; padding: 1px 3px; opacity: 0.65; }
+  .hist-milestone-badge { display: inline-block; font-size: 10px; color: var(--accent); background: var(--accent-light); border-radius: 4px; padding: 1px 5px; margin-left: 4px; }
+
+  .history-list { margin-top: 8px; }
+  .history-item { font-size: 12px; color: var(--text2); padding: 6px 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+  .history-item:last-child { border-bottom: none; }
+  .history-type { color: var(--text3); white-space: nowrap; }
+  .history-comment { color: var(--text3); font-size: 11px; margin-top: 2px; }
+
+  /* SETTINGS */
+  .setting-item { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid var(--border); }
+  .setting-item:last-child { border-bottom: none; }
+  .setting-label { font-size: 15px; font-weight: 500; }
+
+  /* MISC */
+  .empty-state { text-align: center; padding: 40px 20px; color: var(--text3); }
+  .empty-state .emoji { font-size: 40px; margin-bottom: 12px; }
+  .empty-state p { font-size: 14px; }
+  .toast { position: fixed; bottom: calc(var(--tab-h) + 16px); left: 50%; transform: translateX(-50%); background: #333; color: #fff; padding: 10px 20px; border-radius: 20px; font-size: 13px; z-index: 300; opacity: 0; transition: opacity 0.3s; pointer-events: none; white-space: nowrap; }
+  .toast.show { opacity: 1; }
+  .divider { height: 1px; background: var(--border); margin: 12px 0; }
+  .section-title { font-size: 14px; font-weight: 700; margin-bottom: 10px; color: var(--text2); }
+  .flex-between { display: flex; justify-content: space-between; align-items: center; }
+  .collapsible { display: none; }
+  .collapsible.open { display: block; }
+
+  /* DETAIL */
+  .detail-field { margin-bottom: 12px; }
+  .detail-field-label { font-size: 11px; color: var(--text3); margin-bottom: 3px; }
+  .detail-field-value { font-size: 15px; font-weight: 500; }
+  .casting-display { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
+  .casting-tag { padding: 6px 14px; border-radius: 20px; font-size: 14px; font-weight: 600; }
+  .casting-tag.sky { background: #EDE6E0; color: #5A4838; }
+  .casting-tag.philo { background: #E8E2DC; color: #6A5848; }
+  [data-theme="dark"] .casting-tag.sky { background: #2A1A0A; color: #C4966A; }
+  [data-theme="dark"] .casting-tag.philo { background: #2A2008; color: #D4AF37; }
+
+  /* HOME */
+  .next-show-card { background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%); border-radius: var(--radius); padding: 18px; margin-bottom: 8px; color: #fff; position: relative; overflow: hidden; cursor: pointer; }
+  .next-show-card::before { content: '🕊️'; position: absolute; right: 16px; top: 12px; font-size: 40px; opacity: 0.15; }
+  .next-show-dday { font-size: 32px; font-weight: 900; letter-spacing: -1px; margin-bottom: 4px; }
+  .next-show-dday.today-dday { color: #ffe066; }
+  .next-show-date { font-size: 13px; opacity: 0.85; margin-bottom: 10px; }
+  .next-show-casting { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+  .next-show-pill { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+  .next-show-pill.sky { background: rgba(255,255,255,0.25); }
+  .next-show-pill.philo { background: rgba(255,240,180,0.3); }
+  .next-show-seat { font-size: 12px; opacity: 0.75; }
+
+  .upcoming-item { display: flex; align-items: center; padding: 9px 0; border-bottom: 1px solid var(--border); cursor: pointer; gap: 10px; }
+  .upcoming-item:last-child { border-bottom: none; }
+  .upcoming-dday { font-size: 12px; font-weight: 700; color: var(--accent); min-width: 36px; }
+  .upcoming-date { font-size: 12px; color: var(--text2); }
+  .upcoming-cast { font-size: 12px; color: var(--text3); white-space: nowrap; margin-left: auto; }
+  .upcoming-seat { font-size: 11px; color: var(--text3); opacity: 0.75; white-space: nowrap; }
+
+  .home-stamp-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .home-stamp-row:last-child { border-bottom: none; }
+  .home-stamp-name { font-size: 13px; font-weight: 600; min-width: 70px; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .home-stamp-bar { flex: 2; height: 6px; background: var(--bg3); border-radius: 3px; position: relative; }
+  .home-stamp-bar-fill { height: 100%; border-radius: 3px; position: absolute; top: 0; left: 0; transition: width 0.4s; }
+  .home-stamp-bar-fill.scheduled { background: var(--border); }
+  .home-stamp-bar-fill.actual    { background: var(--accent); }
+  .home-stamp-count { font-size: 11px; color: var(--text3); min-width: 72px; text-align: right; white-space: nowrap; }
+
+  .home-coupon-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .home-coupon-row:last-child { border-bottom: none; }
+  .home-coupon-name { font-size: 13px; color: var(--text2); }
+  .home-coupon-nums { display: flex; align-items: baseline; gap: 2px; }
+  .home-coupon-cur  { font-size: 20px; font-weight: 700; color: var(--accent); }
+  .home-coupon-sep  { font-size: 13px; color: var(--text3); margin: 0 2px; }
+  .home-coupon-final{ font-size: 13px; font-weight: 600; color: var(--text3); }
+
+  /* SCHEDULE FILTER CHIPS */
+  .filter-wrap  { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; margin-bottom: 12px; }
+  .filter-row   { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .filter-row:last-child { margin-bottom: 0; }
+  .filter-label { font-size: 11px; color: var(--text3); font-weight: 600; min-width: 40px; flex-shrink: 0; }
+  .filter-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chip { padding: 4px 12px; border-radius: 20px; border: 1.5px solid var(--border); background: var(--bg3); color: var(--text2); font-size: 12px; cursor: pointer; transition: all 0.15s; }
+  .chip.active  { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  /* SCHEDULE BADGES */
+  .badge { display: inline-block; font-size: 10px; padding: 2px 6px; border-radius: 4px; margin-left: 4px; font-weight: 600; }
+  .badge-done   { background: var(--accent-light); color: var(--accent); }
+  .badge-booked { background: #e8f5e9; color: var(--success); }
+  [data-theme="dark"] .badge-booked { background: #1a3a2a; color: var(--success); }
+
+  /* SCHEDULE CHECK COLUMN (I5) */
+  .schedule-check { width: 28px; text-align: center; padding: 0 4px !important; }
+  .check-done   { display:inline-flex; width:20px; height:20px; border-radius:50%; background:var(--accent); color:#fff; align-items:center; justify-content:center; font-size:11px; font-weight:700; }
+  .check-booked { display:inline-flex; width:20px; height:20px; border-radius:50%; background:transparent; color:var(--success); align-items:center; justify-content:center; font-size:13px; border:1.5px solid var(--success); }
+
+  /* CALENDAR DOTS & EVENTS */
+  /* cal-day styles defined above */
+
+  /* CALENDAR EVENT LAYER (I4) */
+  
+
+  /* ACTOR PHOTO SETTINGS */
+  
+  .actor-thumb { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; }
+  .actor-init-thumb { width: 36px; height: 36px; border-radius: 50%; background: var(--accent-light); color: var(--accent); font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .actor-name-label { flex: 1; font-size: 14px; font-weight: 500; }
+  .actor-role-tag { font-size: 10px; color: var(--text3); }
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- ========== HOME ========== -->
+<div class="page active" id="page-home">
+  <div class="page-header">
+    <div class="page-title">🕊️ 사의 찬미</div>
+    <button class="btn btn-primary btn-sm" onclick="openAddRecord()">+ 기록</button>
+  </div>
+  <div id="home-next-show"></div>
+  <div class="card" id="home-upcoming-card" style="margin-bottom:12px;display:none;">
+    <div class="card-title">📋 예정 일정</div>
+    <div id="home-upcoming"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">🎟 쿠폰 현황</div>
+    <div id="home-coupons"></div>
+  </div>
+  <div class="card">
+    <div class="card-title" onclick="toggleHomeStamps()" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;margin-bottom:0;">
+      <span>🎫 다관람 카드 현황</span>
+      <span id="home-stamps-toggle-icon" style="font-size:11px;color:var(--text3);">▲</span>
+    </div>
+    <div id="home-stamps-wrap">
+      <div id="home-stamps" style="margin-top:8px;"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">📋 최근 관람</div>
+    <div id="home-recent"></div>
+    <div id="home-recent-more" style="text-align:center;margin-top:6px;"></div>
+  </div>
+</div>
+
+<!-- ========== CALENDAR ========== -->
+<div class="page" id="page-calendar">
+  <div class="page-header">
+    <div class="page-title">📅 캘린더</div>
+    <button class="btn btn-primary btn-sm" onclick="openAddRecord()">+ 기록</button>
+  </div>
+  <!-- 배우 필터 -->
+  <div class="cal-filter">
+    <div class="cal-filter-row">
+      <span class="cal-filter-label">김우진</span>
+      <div id="cal-chips-sky" style="display:flex;gap:6px;flex-wrap:wrap;">
+        <button class="cal-chip active" data-name="" onclick="setCalFilterSky(null,this)">전체</button>
+        <button class="cal-chip" data-name="김우진" onclick="setCalFilterSky('김우진',this)">김우진</button>
+        <button class="cal-chip" data-name="김우진" onclick="setCalFilterSky('김우진',this)">김우진</button>
+        <button class="cal-chip" data-name="김우진" onclick="setCalFilterSky('김우진',this)">김우진</button>
+      </div>
+    </div>
+    <div class="cal-filter-row">
+      <span class="cal-filter-label">윤심덕</span>
+      <div id="cal-chips-philo" style="display:flex;gap:6px;flex-wrap:wrap;">
+        <button class="cal-chip active" data-name="" onclick="setCalFilterDidi(null,this)">전체</button>
+        <button class="cal-chip" data-name="윤심덕" onclick="setCalFilterDidi('윤심덕',this)">윤심덕</button>
+        <button class="cal-chip" data-name="윤심덕" onclick="setCalFilterDidi('윤심덕',this)">윤심덕</button>
+        <button class="cal-chip" data-name="윤심덕" onclick="setCalFilterDidi('윤심덕',this)">윤심덕</button>
+      </div>
+    </div>
+    <div id="cal-filter-hint" style="font-size:11px;color:var(--text3);padding:2px 0 4px;">배우를 선택하면 해당 회차가 표시됩니다</div>
+  </div>
+  <div class="card" style="padding:12px;">
+    <div class="cal-nav">
+      <button class="btn-icon" onclick="calPrev()">‹</button>
+      <div class="cal-month" id="cal-title"></div>
+      <button class="btn-icon" onclick="calNext()">›</button>
+    </div>
+    <div id="cal-wrap"></div>
+  </div>
+  <div id="cal-day-records"></div>
+</div>
+
+<!-- ========== COUPON / STAMP ========== -->
+<div class="page" id="page-coupon">
+  <div class="page-header">
+    <div class="page-title">쿠폰·도장</div>
+    <button class="btn btn-outline btn-sm" onclick="openAddStampBoard()">+ 도장판</button>
+  </div>
+
+  <!-- 쿠폰 현황 -->
+  <div class="card" style="margin-bottom:16px;">
+    <div class="flex-between" style="margin-bottom:12px;">
+      <div class="card-title" style="margin:0;">쿠폰 현황</div>
+      <button class="btn btn-primary btn-sm" onclick="openAddCouponManual()">+ 할인권 추가/차감</button>
+    </div>
+    <div id="coupon-list"></div>
+    <div style="margin-top:8px;font-size:11px;color:var(--text3);text-align:center;">할인권 사용 기간: ~2026.07.26</div>
+  </div>
+
+  <!-- 전체 이력 표 -->
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-title" onclick="toggleCouponHistory()" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;margin-bottom:0;">
+      <span>할인권 상세 기록</span>
+      <span id="coupon-history-toggle-icon" style="font-size:11px;color:var(--text3);">▼</span>
+    </div>
+    <div id="coupon-history-wrap" style="display:none;">
+      <div id="coupon-all-history" style="margin-top:8px;"></div>
+    </div>
+  </div>
+
+  <!-- 다관람 카드 -->
+  <div class="section-title" style="margin-bottom:8px;">다관람 카드</div>
+  <div id="stamp-boards-list" style="margin-bottom:16px;"></div>
+</div>
+
+<!-- ========== STATS ========== -->
+<div class="page" id="page-stats">
+  <div class="page-header"><div class="page-title">😌 통계</div></div>
+  <div class="card">
+    <div class="card-title">🎭 배우별 관람 횟수</div>
+    <table class="stats-table" id="stats-actors"></table>
+  </div>
+  <div class="card">
+    <div class="card-title">🔗 페어 조합별</div>
+    <table class="stats-table" id="stats-pairs"></table>
+  </div>
+  <div class="card">
+    <div class="card-title">💺 좌석 히트맵</div>
+    <div class="heatmap-scroll"><div class="heatmap-wrap" id="heatmap"></div></div>
+    <div class="heatmap-legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--bg3);border:1px solid var(--border)"></div>0회</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--seat1)"></div>1회</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--seat2)"></div>2회</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--seat3)"></div>3회</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--seat4)"></div>4회</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--seat5)"></div>5회+</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="flex-between" style="margin-bottom:8px;">
+      <div class="card-title" style="margin:0;">💰 지출 현황</div>
+      <button class="btn btn-outline btn-sm" id="money-reveal-btn" onclick="toggleMoneyBlur()">👁👁</button>
+    </div>
+    <div class="money-blur-wrap blurred" id="money-blur">
+      <div id="stats-money"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SETTINGS ========== -->
+<div class="page" id="page-settings">
+  <div class="page-header"><div class="page-title">⚙️ 설정</div></div>
+  <div class="card">
+    <div class="setting-item">
+      <div class="setting-label">다크모드</div>
+      <button class="toggle" id="dark-toggle" onclick="toggleDark()"></button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">📋 스케줄</div>
+    <div class="setting-item">
+      <div>
+        <div class="setting-label" style="font-size:14px;">마지막 업데이트</div>
+        <div id="schedule-update-time" style="font-size:12px;color:var(--text3);margin-top:2px;">확인 중...</div>
+      </div>
+      <button class="btn btn-outline btn-sm" onclick="fetchSchedule(true)">새로고침</button>
+    </div>
+    <div id="schedule-fetch-status" style="font-size:12px;color:var(--text3);margin-top:6px;"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">🎪 이벤트</div>
+    <div class="setting-item">
+      <div>
+        <div class="setting-label" style="font-size:14px;">마지막 업데이트</div>
+        <div id="event-update-time" style="font-size:12px;color:var(--text3);margin-top:2px;">확인 중...</div>
+      </div>
+      <button class="btn btn-outline btn-sm" onclick="fetchEvents(true)">새로고침</button>
+    </div>
+    <div id="event-fetch-status" style="font-size:12px;color:var(--text3);margin-top:6px;"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">💾 데이터 백업/복원</div>
+    <div style="display:flex;gap:10px;">
+      <button class="btn btn-outline" style="flex:1;" onclick="exportData()">JSON 내보내기</button>
+      <button class="btn btn-outline" style="flex:1;" onclick="document.getElementById('import-file').click()">JSON 가져오기</button>
+    </div>
+    <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
+  </div>
+  <div class="card">
+    <div class="card-title">📱 홈스크린 추가 (PWA)</div>
+    <p style="font-size:13px;color:var(--text2);">브라우저 메뉴 → "홈 화면에 추가"를 선택하면 앱처럼 설치할 수 있습니다.</p>
+  </div>
+</div>
+
+<!-- TAB BAR -->
+<nav class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('home',this)"><span class="icon">🏠</span><span>홈</span></button>
+  <button class="tab-btn" onclick="switchTab('calendar',this)"><span class="icon">📅</span><span>캘린더</span></button>
+  <button class="tab-btn" onclick="switchTab('coupon',this)"><span class="icon">🎫</span><span>쿠폰</span></button>
+  <button class="tab-btn" onclick="switchTab('stats',this)"><span class="icon">😌</span><span>통계</span></button>
+  <button class="tab-btn" onclick="switchTab('settings',this)"><span class="icon">⚙️</span><span>설정</span></button>
+</nav>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- ===== ADD/EDIT RECORD PANEL ===== -->
+<div class="overlay" id="overlay-record">
+  <div class="panel">
+    <div class="panel-handle"></div>
+    <div class="flex-between" style="margin-bottom:20px;">
+      <div class="panel-title" id="record-panel-title">관람 기록 추가</div>
+      <button class="btn-icon" onclick="closePanel('overlay-record')">✕</button>
+    </div>
+    <input type="hidden" id="edit-record-id">
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">날짜 *</label>
+        <input type="date" class="form-control" id="rec-date" onchange="autoFillCasting()">
+      </div>
+      <div class="form-group">
+        <label class="form-label">시간 *</label>
+        <select class="form-control" id="rec-time" onchange="onTimeChange()">
+          <option value="">선택</option>
+          <option value="14:00">14:00</option>
+          <option value="15:00">15:00</option>
+          <option value="16:00">16:00</option>
+          <option value="18:00">18:00</option>
+          <option value="19:00">19:00</option>
+          <option value="20:00">20:00</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">김우진 *</label>
+        <select class="form-control" id="rec-alex">
+          <option value="">선택</option>
+          <option value="김우진">김우진</option>
+          <option value="김우진">김우진</option>
+          <option value="김우진">김우진</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">윤심덕 *</label>
+        <select class="form-control" id="rec-philo">
+          <option value="">선택</option>
+          <option value="윤심덕">윤심덕</option>
+          <option value="윤심덕">윤심덕</option>
+          <option value="윤심덕">윤심덕</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- 미정 체크 (기본 예매확정) -->
+    <div class="form-group" style="display:flex;align-items:center;gap:10px;padding:4px 0;">
+      <label style="display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer;color:var(--text2);">
+        <input type="checkbox" id="rec-unconfirmed" onchange="onUnconfirmedChange()" style="width:16px;height:16px;accent-color:var(--accent);">
+        미정 (예매 미확정)
+      </label>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">열</label>
+        <select class="form-control" id="rec-zone">
+          <option value="">-</option>
+          <option value="A">A열</option>
+          <option value="B">B열</option>
+          <option value="C">C열</option>
+          <option value="D">D열</option>
+          <option value="E">E열</option>
+          <option value="F">F열</option>
+          <option value="G">G열</option>
+          <option value="H">H열</option>
+          <option value="I">I열</option>
+          <option value="J">J열</option>
+          <option value="K">K열</option>
+          <option value="L">L열</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">번호</label>
+        <input type="number" class="form-control" id="rec-num" placeholder="1-20" min="1" max="20">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">할인권종 <span style="color:var(--text3);font-weight:400;">(선택)</span></label>
+      <select class="form-control" id="rec-discount-type" onchange="onDiscountTypeChange()">
+        <option value="">없음 (일반)</option>
+        <option value="40% 할인권">40% 할인권 (40%)</option>
+        <option value="50% 할인권">50% 할인권 (50%)</option>
+        <option value="증빙패스">증빙패스</option>
+        <option value="프리뷰 할인">프리뷰 할인</option>
+        <option value="조기예매 할인">조기예매 할인 (20%)</option>
+        <option value="재관람 할인">재관람 할인 (30%)</option>
+        <option value="MJ Starfish 할인">MJ Starfish 할인 (25%)</option>
+        <option value="타임세일">타임세일</option>
+        <option value="마티네">마티네 (30%)</option>
+        <option value="장애인/국가유공자">장애인/국가유공자 (50%)</option>
+        <option value="기타">기타</option>
+      </select>
+      <div id="rec-discount-warn" style="display:none;margin-top:6px;font-size:12px;color:var(--danger);">⚠ 현재 보유한 쿠폰이 없습니다</div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">티켓 가격 (원)</label>
+      <input type="number" class="form-control" id="rec-price" placeholder="예: 45000">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">한줄 코멘트</label>
+      <input type="text" class="form-control" id="rec-comment" placeholder="예매처, 도장교환 상대 등">
+    </div>
+
+    <!-- 다관람 카드 -->
+    <div class="form-group" id="rec-stamp-group">
+      <label class="form-label">다관람 카드</label>
+      <select class="form-control" id="rec-stamp-board" onchange="onRecStampBoardChange()">
+        <option value="">연동 안 함</option>
+      </select>
+      <div style="margin-top:6px;">
+        <button type="button" class="btn btn-outline btn-sm" style="width:100%;" onclick="openAddStampBoardFromRecord()">+ 새 도장판 만들기</button>
+      </div>
+      <div id="rec-stamp-qty-group" style="display:none;margin-top:10px;">
+        <label class="form-label">도장 수량</label>
+        <div style="display:flex;gap:8px;">
+          <label style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:7px;border:1.5px solid var(--accent);border-radius:8px;cursor:pointer;font-size:13px;color:var(--accent);font-weight:700;" id="rec-qty-label-1">
+            <input type="radio" name="rec-stamp-qty" value="1" checked onchange="updateRecQtyLabel()"> 1개
+          </label>
+          <label style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:7px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;font-size:13px;" id="rec-qty-label-2">
+            <input type="radio" name="rec-stamp-qty" value="2" onchange="updateRecQtyLabel()"> 2개
+          </label>
+          <label style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:7px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;font-size:13px;" id="rec-qty-label-3">
+            <input type="radio" name="rec-stamp-qty" value="3" onchange="updateRecQtyLabel()"> 3개
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">별점</label>
+      <div class="star-group" id="star-group">
+        <button class="star-btn" onclick="setStar(1)">☆</button>
+        <button class="star-btn" onclick="setStar(2)">☆</button>
+        <button class="star-btn" onclick="setStar(3)">☆</button>
+        <button class="star-btn" onclick="setStar(4)">☆</button>
+        <button class="star-btn" onclick="setStar(5)">☆</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">감상 메모</label>
+      <textarea class="form-control" id="rec-memo" placeholder="자유롭게 기록해보세요..."></textarea>
+    </div>
+
+    <div style="display:flex;gap:10px;margin-top:8px;">
+      <button class="btn btn-primary" style="flex:1;" onclick="saveRecord()">저장</button>
+      <button class="btn btn-outline" onclick="closePanel('overlay-record')">취소</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== RECORD DETAIL PANEL ===== -->
+<div class="overlay" id="overlay-detail">
+  <div class="panel">
+    <div class="panel-handle"></div>
+    <div class="flex-between" style="margin-bottom:16px;">
+      <div class="panel-title" id="detail-title"></div>
+      <button class="btn-icon" onclick="closePanel('overlay-detail')">✕</button>
+    </div>
+    <div id="detail-content"></div>
+    <div style="display:flex;gap:10px;margin-top:16px;">
+      <button class="btn btn-outline" style="flex:1;" onclick="editCurrentRecord()">수정</button>
+      <button class="btn btn-danger btn-sm" onclick="deleteCurrentRecord()">삭제</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DIRECT STAMP HISTORY PANEL ===== -->
+<div class="overlay" id="overlay-direct-stamp">
+  <div class="panel">
+    <div class="panel-handle"></div>
+    <div class="flex-between" style="margin-bottom:20px;">
+      <div class="panel-title" id="direct-stamp-panel-title">이력 직접 추가</div>
+      <button class="btn-icon" onclick="cancelDirectStamp()">✕</button>
+    </div>
+    <input type="hidden" id="direct-stamp-edit-idx">
+    <div class="form-group">
+      <label class="form-label">날짜</label>
+      <input type="date" class="form-control" id="direct-stamp-date">
+    </div>
+    <div class="form-group">
+      <label class="form-label">코멘트 (선택)</label>
+      <input type="text" class="form-control" id="direct-stamp-comment" placeholder="예: 도장 나눔">
+    </div>
+    <button class="btn btn-primary" style="width:100%;margin-top:8px;" id="direct-stamp-submit-btn" onclick="saveDirectStampHistory()">추가</button>
+  </div>
+</div>
+
+<!-- ===== STAMP HISTORY PANEL ===== -->
+<div class="overlay" id="overlay-stamp-history">
+  <div class="panel">
+    <div class="panel-handle"></div>
+    <div class="flex-between" style="margin-bottom:16px;">
+      <div class="panel-title" id="stamp-history-panel-title">이력</div>
+      <button class="btn-icon" onclick="closePanel('overlay-stamp-history')">✕</button>
+    </div>
+    <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">
+      <button class="btn btn-outline btn-sm" onclick="openAddStampHistoryDirectFromPanel()">+ 이력 추가</button>
+    </div>
+    <div id="stamp-history-panel-content"></div>
+  </div>
+</div>
+
+<!-- ===== ADD STAMP BOARD PANEL ===== -->
+<div class="overlay" id="overlay-stamp">
+  <div class="panel">
+    <div class="panel-handle"></div>
+    <div class="flex-between" style="margin-bottom:20px;">
+      <div class="panel-title">새 도장판 시작</div>
+      <button class="btn-icon" onclick="closePanel('overlay-stamp')">✕</button>
+    </div>
+    <div style="background:var(--accent-light);border-radius:10px;padding:12px 14px;margin-bottom:16px;font-size:12px;color:var(--accent);">
+      <div style="font-weight:700;margin-bottom:6px;">🎫 다관람 카드 혜택</div>
+      <div style="display:flex;gap:8px;margin-bottom:8px;">
+        <div style="flex:1;text-align:center;background:var(--bg1);border-radius:8px;padding:6px 4px;">
+          <div style="font-size:11px;color:var(--text3);margin-bottom:2px;">3칸 달성</div>
+          <div style="font-weight:700;color:var(--text1);font-size:11px;">40% 할인권 ×2</div>
+        </div>
+        <div style="flex:1;text-align:center;background:var(--bg1);border-radius:8px;padding:6px 4px;">
+          <div style="font-size:11px;color:var(--text3);margin-bottom:2px;">5칸 달성</div>
+          <div style="font-weight:700;color:var(--text1);font-size:11px;">📸 폴라로이드</div>
+        </div>
+        <div style="flex:1;text-align:center;background:var(--bg1);border-radius:8px;padding:6px 4px;">
+          <div style="font-size:11px;color:var(--text3);margin-bottom:2px;">7칸 달성</div>
+          <div style="font-weight:700;color:var(--text1);font-size:11px;">50% 할인권+CD</div>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--text2);line-height:1.7;">
+        <div>⏰ 공연 시작 1시간 전 ~ 종료 후 15분, 로비 MD부스</div>
+        <div style="margin-top:4px;color:var(--text3);">· 유료 관람 1회차부터 발급 · 한 회차 유료티켓 1매만 적립</div>
+        <div style="color:var(--text3);">· 할인권 사용 기간: ~2026.07.26</div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">도장판 이름 <span style="color:var(--text3);font-weight:400;">(비워두면 숫자 자동)</span></label>
+      <input type="text" class="form-control" id="stamp-name" placeholder="예: A, 첫번째...">
+    </div>
+    <button class="btn btn-primary" style="width:100%;margin-top:8px;" onclick="saveStampBoard()">시작하기</button>
+  </div>
+</div>
+
+<!-- ===== ADD STAMP PANEL ===== -->
+<div class="overlay" id="overlay-add-stamp">
+  <div class="panel">
+    <div class="panel-handle"></div>
+    <div class="flex-between" style="margin-bottom:20px;">
+      <div class="panel-title">도장 찍기</div>
+      <button class="btn-icon" onclick="closePanel('overlay-add-stamp')">✕</button>
+    </div>
+    <input type="hidden" id="stamp-board-id">
+    <div class="form-group">
+      <label class="form-label">도장 추가 방식</label>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <label style="display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer;"><input type="radio" name="stamp-method" value="직접 관람" checked onchange="updateStampSessionOptions()"> 직접 관람</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer;"><input type="radio" name="stamp-method" value="적립권 사용" onchange="updateStampSessionOptions()"> 적립권 사용</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer;"><input type="radio" name="stamp-method" value="교환" onchange="updateStampSessionOptions()"> 교환</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer;"><input type="radio" name="stamp-method" value="나눔" onchange="updateStampSessionOptions()"> 나눔</label>
+      </div>
+    </div>
+    <div class="form-group" style="margin-top:12px;">
+      <label class="form-label">수량</label>
+      <div style="display:flex;gap:8px;">
+        <label style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:8px;border:1.5px solid var(--accent);border-radius:8px;cursor:pointer;font-size:14px;color:var(--accent);font-weight:700;" id="qty-label-1">
+          <input type="radio" name="stamp-qty" value="1" checked onchange="updateQtyLabel()"> 1개
+        </label>
+        <label style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:8px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;font-size:14px;" id="qty-label-2">
+          <input type="radio" name="stamp-qty" value="2" onchange="updateQtyLabel()"> 2개
+        </label>
+        <label style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:8px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;font-size:14px;" id="qty-label-3">
+          <input type="radio" name="stamp-qty" value="3" onchange="updateQtyLabel()"> 3개
+        </label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">날짜</label>
+      <input type="date" class="form-control" id="stamp-date" onchange="updateStampSessionOptions()">
+    </div>
+    <div class="form-group" id="stamp-session-group" style="display:none;">
+      <label class="form-label">회차</label>
+      <div id="stamp-session-options" style="display:flex;flex-direction:column;gap:6px;"></div>
+    </div>
+    <div class="form-group" id="stamp-exchange-memo-group" style="display:none;">
+      <label class="form-label">교환 내용</label>
+      <input type="text" class="form-control" id="stamp-exchange-memo" placeholder="교환 내용 입력">
+    </div>
+    <div class="form-group">
+      <label class="form-label">코멘트 (선택)</label>
+      <input type="text" class="form-control" id="stamp-comment" placeholder="메모">
+    </div>
+    <button class="btn btn-primary" style="width:100%;margin-top:8px;" onclick="addStamp()">도장 찍기</button>
+  </div>
+</div>
+
+<!-- ===== ADD COUPON MANUAL PANEL ===== -->
+<div class="overlay" id="overlay-coupon-manual">
+  <div class="panel">
+    <div class="panel-handle"></div>
+    <div class="flex-between" style="margin-bottom:20px;">
+      <div class="panel-title">할인권 추가/차감</div>
+      <button class="btn-icon" onclick="closePanel('overlay-coupon-manual')">✕</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">종류</label>
+      <select class="form-control" id="manual-coupon-key">
+        <option value="discount40">40% 할인권</option>
+        <option value="discount50">50% 할인권</option>
+        <option value="discountPass">증빙패스</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">유형</label>
+      <div style="display:flex;gap:8px;">
+        <label style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:9px;border:1.5px solid var(--accent);border-radius:8px;cursor:pointer;font-size:13px;color:var(--accent);font-weight:700;" id="manual-type-label-획득">
+          <input type="radio" name="manual-coupon-type" value="획득" checked onchange="updateManualTypeLabel()"> 획득
+        </label>
+        <label style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:9px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;font-size:13px;" id="manual-type-label-사용">
+          <input type="radio" name="manual-coupon-type" value="사용" onchange="updateManualTypeLabel()"> 사용
+        </label>
+        <label style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:9px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;font-size:13px;" id="manual-type-label-복원">
+          <input type="radio" name="manual-coupon-type" value="복원" onchange="updateManualTypeLabel()"> 복원
+        </label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">수량</label>
+      <div style="display:flex;gap:8px;">
+        <label style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:9px;border:1.5px solid var(--accent);border-radius:8px;cursor:pointer;font-size:13px;color:var(--accent);font-weight:700;" id="manual-qty-label-1">
+          <input type="radio" name="manual-coupon-qty" value="1" checked onchange="updateManualQtyLabel()"> 1개
+        </label>
+        <label style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:9px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;font-size:13px;" id="manual-qty-label-2">
+          <input type="radio" name="manual-coupon-qty" value="2" onchange="updateManualQtyLabel()"> 2개
+        </label>
+        <label style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:9px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;font-size:13px;" id="manual-qty-label-3">
+          <input type="radio" name="manual-coupon-qty" value="3" onchange="updateManualQtyLabel()"> 3개
+        </label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">날짜</label>
+      <input type="date" class="form-control" id="manual-coupon-date">
+    </div>
+    <div class="form-group">
+      <label class="form-label">메모 (선택)</label>
+      <input type="text" class="form-control" id="manual-coupon-comment" placeholder="예: 도장 교환">
+    </div>
+    <button class="btn btn-primary" style="width:100%;margin-top:8px;" onclick="saveManualCoupon()">저장</button>
+  </div>
+</div>
+
+
+<script>
+// ============================================================
+// DATA LAYER
+// ============================================================
+const DB = {
+  get(key, def) { try { return JSON.parse(localStorage.getItem('sachan_'+key)) ?? def; } catch { return def; } },
+  set(key, val) { localStorage.setItem('sachan_'+key, JSON.stringify(val)); }
+};
+function localDate() { const d = new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function getRecords()      { return DB.get('records', []); }
+function saveRecords(r)    { DB.set('records', r); }
+function getSchedule()     { return DB.get('schedule', []); }
+function saveSchedule(s)   { DB.set('schedule', s); }
+function getEvents() {
+  return DB.get('events', []);
+}
+function saveEvents(ev)    { DB.set('events', ev); }
+function migrateStampBoards(boards) {
+  return boards.map(b => {
+    if (!b.milestones) {
+      b.milestones = [
+        { at: 3, reward: '40% 할인권 ×2', couponKey: 'discount40', qty: 2, notified: b.currentCount >= 3 },
+        { at: 5, reward: '📸 폴라로이드', couponKey: null, notified: b.currentCount >= 5 },
+        { at: 7, reward: '50% 할인권 + 미니CD + 포토북', couponKey: 'discount50', qty: 1, notified: b.currentCount >= 7 }
+      ];
+    } else {
+      const at3 = b.milestones.find(m => m.at === 3);
+      if (at3 && at3.qty === undefined) at3.qty = 2;
+      const at7 = b.milestones.find(m => m.at === 7);
+      if (at7 && at7.qty === undefined) at7.qty = 1;
+    }
+    if (!b.totalSlots) b.totalSlots = 7;
+    if (!b.reward)     b.reward     = '미니CD + 포토북';
+    if (!b.history)    b.history    = [];
+    return b;
+  });
+}
+function getStampBoards()  { return migrateStampBoards(DB.get('stamp_boards', [])); }
+function saveStampBoards(s){ DB.set('stamp_boards', s); }
+function getCoupons() {
+  return DB.get('coupons', {
+    discount40:   { count: 0, history: [] },
+    discount50:   { count: 0, history: [] },
+    discountPass: { count: 0, history: [] }
+  });
+}
+function saveCoupons(c) { DB.set('coupons', c); }
+function getSettings()     { return DB.get('settings', { darkMode: false }); }
+function saveSettings(s)   { DB.set('settings', s); }
+function uuid()            { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
+
+// ============================================================
+// TAB NAVIGATION
+// ============================================================
+function switchTab(name, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  btn.classList.add('active');
+  if (name==='home')     renderHome();
+  if (name==='calendar') renderCalendar();
+  if (name==='stats')    renderStats();
+  if (name==='coupon')   renderCoupon();
+  if (name==='settings') {
+    const savedAt = localStorage.getItem('scheduleUpdatedAt');
+    const timeEl  = document.getElementById('schedule-update-time');
+    if (timeEl) timeEl.textContent = savedAt ? savedAt + ' (캐시)' : '없음';
+    const evSavedAt = localStorage.getItem('eventsUpdatedAt');
+    const evTimeEl  = document.getElementById('event-update-time');
+    if (evTimeEl) evTimeEl.textContent = evSavedAt ? evSavedAt + ' (캐시)' : '없음';
+  }
+}
+
+// ============================================================
+// PANEL / OVERLAY
+// ============================================================
+function openPanel(id)  { document.getElementById(id).classList.add('open'); }
+function closePanel(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.overlay').forEach(ov => {
+  ov.addEventListener('click', e => { if (e.target===ov) ov.classList.remove('open'); });
+});
+
+// ============================================================
+// TOAST
+// ============================================================
+let _toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ============================================================
+// STAR RATING
+// ============================================================
+let currentStar = 0;
+function setStar(n) {
+  currentStar = n;
+  document.querySelectorAll('.star-btn').forEach((s,i) => s.textContent = i<n ? '★' : '☆');
+}
+function resetStars() {
+  currentStar = 0;
+  document.querySelectorAll('.star-btn').forEach(s => s.textContent = '☆');
+}
+
+// ============================================================
+// CASTING AUTO-FILL
+// ============================================================
+function autoFillCasting() {
+  const date = document.getElementById('rec-date').value;
+  const timeSelect = document.getElementById('rec-time');
+  if (!date) return;
+  const matches = getSchedule().filter(s => s.date===date);
+  if (matches.length > 0) {
+    const cur = timeSelect.value;
+    timeSelect.innerHTML = '<option value="">선택</option>';
+    matches.sort((a,b)=>a.time.localeCompare(b.time)).forEach(s => {
+      const o = document.createElement('option');
+      o.value = s.time; o.textContent = s.time;
+      timeSelect.appendChild(o);
+    });
+    if (matches.length===1) {
+      timeSelect.value = matches[0].time;
+      document.getElementById('rec-alex').value = matches[0].alex||'';
+      document.getElementById('rec-philo').value   = matches[0].philo||'';
+    } else if (cur) {
+      timeSelect.value = cur;
+      const m = matches.find(s=>s.time===cur);
+      if (m) { document.getElementById('rec-alex').value=m.alex||''; document.getElementById('rec-philo').value=m.philo||''; }
+    }
+  } else { resetTimeOptions(); }
+}
+function onTimeChange() {
+  const date = document.getElementById('rec-date').value;
+  const time = document.getElementById('rec-time').value;
+  if (!date||!time) return;
+  const m = getSchedule().find(s=>s.date===date&&s.time===time);
+  if (m) { document.getElementById('rec-alex').value=m.alex||''; document.getElementById('rec-philo').value=m.philo||''; }
+}
+function resetTimeOptions() {
+  document.getElementById('rec-time').innerHTML = `<option value="">선택</option><option value="14:00">14:00</option><option value="15:00">15:00</option><option value="16:00">16:00</option><option value="18:00">18:00</option><option value="19:00">19:00</option><option value="20:00">20:00</option>`;
+}
+function onUnconfirmedChange() {
+  // purely visual feedback if needed – isBooked is read from checkbox at save time
+}
+
+// ============================================================
+// STAMP BOARD SELECT in RECORD FORM
+// ============================================================
+function populateStampSelect(keepBoardId) {
+  const sel    = document.getElementById('rec-stamp-board');
+  const boards = getStampBoards();
+  boards.forEach(b => recalcStampCount(b)); // 항상 이력 기준으로 재계산
+  const saved  = sel.value; // 새 도장판 추가 후 select 갱신 시 기존 선택값 유지용
+
+  // 상태별 분류
+  const active  = boards.filter(b => !b.paused && b.currentCount < b.totalSlots);
+  const paused  = boards.filter(b =>  b.paused && b.currentCount < b.totalSlots);
+  const done    = boards.filter(b => b.currentCount >= b.totalSlots);
+
+  sel.innerHTML = '<option value="">연동 안 함</option>';
+
+  function addGroup(label, items, suffix, disabled) {
+    if (!items.length) return;
+    const grp = document.createElement('optgroup');
+    grp.label = label;
+    items.forEach(b => {
+      const o = document.createElement('option');
+      o.value = b.id;
+      o.textContent = `[🎫 ${b.name}] (${b.currentCount}/${b.totalSlots})${suffix}`;
+      // 현재 기록에 연동된 도장판은 완료/일시정지 상태라도 선택 가능하게 유지
+      if (disabled && b.id !== keepBoardId) {
+        o.disabled = true;
+        o.style.color = 'var(--text3)';
+      }
+      grp.appendChild(o);
+    });
+    sel.appendChild(grp);
+  }
+
+  addGroup('진행중', active, '', false);
+  addGroup('일시정지 ⏸', paused, ' ⏸', true);
+  addGroup('완료 ✓', done, ' ✓', true);
+
+  // 선택값 복원: editRecord 전달값 우선, 없으면 기존 sel.value
+  if (keepBoardId) sel.value = keepBoardId;
+  else if (saved)  sel.value = saved;
+}
+
+// ============================================================
+// ADD / EDIT RECORD
+// ============================================================
+function openAddRecord(date) {
+  document.getElementById('record-panel-title').textContent = '관람 기록 추가';
+  document.getElementById('edit-record-id').value = '';
+  document.getElementById('rec-date').value = date||'';
+  resetTimeOptions();
+  document.getElementById('rec-time').value = '';
+  document.getElementById('rec-alex').value = '';
+  document.getElementById('rec-philo').value = '';
+  document.getElementById('rec-zone').value = '';
+  document.getElementById('rec-num').value = '';
+  document.getElementById('rec-price').value = '';
+  document.getElementById('rec-discount-type').value = '';
+  document.getElementById('rec-discount-warn').style.display = 'none';
+  document.getElementById('rec-comment').value = '';
+  document.getElementById('rec-memo').value = '';
+  document.getElementById('rec-unconfirmed').checked = false; // default: confirmed (isBooked=true)
+  populateStampSelect();
+  document.getElementById('rec-stamp-board').value = '';
+  resetStars();
+  if (date) autoFillCasting();
+  openPanel('overlay-record');
+}
+
+function editRecord(id) {
+  const r = getRecords().find(x=>x.id===id);
+  if (!r) return;
+  closePanel('overlay-detail');
+  document.getElementById('record-panel-title').textContent = '관람 기록 수정';
+  document.getElementById('edit-record-id').value = id;
+  document.getElementById('rec-date').value = r.date;
+  resetTimeOptions();
+  autoFillCasting();
+  document.getElementById('rec-time').value = r.time;
+  document.getElementById('rec-alex').value = r.alex;
+  document.getElementById('rec-philo').value = r.philo;
+  document.getElementById('rec-zone').value = r.seatZone||'';
+  document.getElementById('rec-num').value = r.seatNumber||'';
+  document.getElementById('rec-price').value = r.price||'';
+  document.getElementById('rec-discount-type').value = r.discountType||'';
+  document.getElementById('rec-discount-warn').style.display = 'none';
+  document.getElementById('rec-comment').value = r.comment||'';
+  document.getElementById('rec-memo').value = r.memo||'';
+  // isBooked: true by default; unconfirmed = !isBooked
+  // isBooked === false 이면 미정 (명시적 false 비교)
+  document.getElementById('rec-unconfirmed').checked = r.isBooked === false;
+  // keepBoardId 전달 → 완료/일시정지 상태라도 현재 연동 도장판 옵션을 선택 가능하게 유지
+  populateStampSelect(r.stampBoardId || null);
+  onRecStampBoardChange();
+  // 저장된 stampQty 복원 (폼이 1로 초기화된 채 저장되면 잘못된 stampChanged 발생 방지)
+  if (r.stampBoardId && r.stampQty) {
+    const qtyEl = document.querySelector(`input[name="rec-stamp-qty"][value="${r.stampQty}"]`);
+    if (qtyEl) { qtyEl.checked = true; updateRecQtyLabel(); }
+  }
+  setStar(r.rating||0);
+  openPanel('overlay-record');
+}
+
+function saveRecord() {
+  const date   = document.getElementById('rec-date').value;
+  const time   = document.getElementById('rec-time').value;
+  const alex = document.getElementById('rec-alex').value;
+  const philo   = document.getElementById('rec-philo').value;
+  if (!date||!time||!alex||!philo) { showToast('날짜, 시간, 캐스팅은 필수입니다'); return; }
+
+  const records  = getRecords();
+  const editId   = document.getElementById('edit-record-id').value;
+  const rowVal   = '';
+  const numVal   = document.getElementById('rec-num').value;
+  const priceVal = document.getElementById('rec-price').value;
+  const isBooked = !document.getElementById('rec-unconfirmed').checked;
+  const stampBoardId  = document.getElementById('rec-stamp-board').value;
+  const recQtyEl      = document.querySelector('input[name="rec-stamp-qty"]:checked');
+  const stampQty      = recQtyEl ? parseInt(recQtyEl.value) || 1 : 1;
+  const discountType  = document.getElementById('rec-discount-type').value || null;
+  const newCouponKey  = DISCOUNT_COUPON_MAP[discountType] || null;
+
+  // 쿠폰 잔여 체크 (신규 또는 할인권종 변경 시)
+  const prevRecord   = editId ? records.find(x => x.id === editId) : null;
+  const prevDiscount = prevRecord?.discountType || null;
+  const prevCouponKey = DISCOUNT_COUPON_MAP[prevDiscount] || null;
+  const couponChanged = discountType !== prevDiscount;
+
+  if (newCouponKey && couponChanged) {
+    const boards = getStampBoards();
+    const coupons = getCoupons();
+    const available = calcCouponCount(newCouponKey, coupons, boards, records);
+    // 같은 쿠폰 유지 수정 시엔 체크 생략 (!(editId && same key))
+    if (available <= 0 && !(editId && prevCouponKey === newCouponKey)) {
+      showToast('현재 보유한 쿠폰이 없습니다');
+      return;
+    }
+  }
+
+  // 쿠폰 count는 records 기반 실시간 계산 — history에 기록하지 않음
+  const record = {
+    id: editId||uuid(), date, time, alex, philo, isBooked,
+    seatZone:     document.getElementById('rec-zone').value||null,
+    seatRow:      null,
+    seatNumber:   numVal!=='' ? parseInt(numVal) : null,
+    price:        priceVal!=='' ? parseInt(priceVal) : null,
+    discountType: discountType,
+    stampBoardId: stampBoardId || null,
+    stampQty:     stampBoardId ? stampQty : null,
+    rating:       currentStar,
+    comment:      document.getElementById('rec-comment').value.trim(),
+    memo:         document.getElementById('rec-memo').value.trim(),
+    createdAt:    editId ? (prevRecord?.createdAt||new Date().toISOString()) : new Date().toISOString(),
+    updatedAt:    new Date().toISOString()
+  };
+
+  if (editId) {
+    records[records.findIndex(x=>x.id===editId)] = record;
+    const prevStampBoardId = prevRecord?.stampBoardId || null;
+    const prevStampQty     = prevRecord?.stampQty || 1;
+    const stampChanged = stampBoardId !== prevStampBoardId || stampQty !== prevStampQty
+      || (prevStampBoardId && date !== prevRecord.date);
+
+    if (stampChanged) {
+      const boards = getStampBoards();
+
+      // ① 이전 도장판에서 이 기록의 이력 제거 (recordId로 정확하게 매칭)
+      if (prevStampBoardId) {
+        const prevBoard = boards.find(b => b.id === prevStampBoardId);
+        if (prevBoard && prevBoard.history) {
+          // recordId 매칭 우선, 없으면 date+method로 폴백
+          const idx = prevBoard.history.map((h,i)=>({h,i})).reverse()
+            .find(({h}) => h.recordId === editId || (h.date === prevRecord.date && h.method?.includes('관람 연동')));
+          if (idx !== undefined) prevBoard.history.splice(idx.i, 1);
+          recalcStampCount(prevBoard);
+          revalidateMilestones(prevBoard);
+        }
+      }
+
+      // ② 새 도장판에 추가 — applyStampToBoard 활용 (마일스톤·할인권 처리 포함)
+      if (stampBoardId) {
+        const newBoard = boards.find(b => b.id === stampBoardId);
+        if (newBoard) {
+          // 같은 도장판이면 마일스톤 notified 리셋 후 재계산
+          if (prevStampBoardId === stampBoardId) revalidateMilestones(newBoard);
+          recalcStampCount(newBoard);
+
+          const remaining = newBoard.totalSlots - newBoard.currentCount;
+          // 꽉 찬 보드면 덮어쓰기 방지 (totalSlots 초과 불가)
+          const actualQty = remaining > 0 ? Math.min(stampQty, remaining) : 0;
+          if (actualQty > 0) {
+            const qtyLabel  = actualQty > 1 ? ' ×' + actualQty : '';
+            if (!newBoard.history) newBoard.history = [];
+            newBoard.history.push({
+              recordId: editId,
+              date,
+              method: `${alex} · ${philo} 관람 연동` + qtyLabel,
+              comment: '',
+              qty: actualQty
+            });
+            recalcStampCount(newBoard);
+
+            // 마일스톤 달성 시 notified 설정 (쿠폰 count는 calcCouponCount()가 m.notified로 동적 계산)
+            if (!newBoard.milestones) newBoard.milestones = [
+              { at:3, reward:'40% 할인권 ×2', couponKey:'discount40', qty:2, notified:false },
+              { at:5, reward:'📸 폴라로이드', couponKey:null, notified:false },
+              { at:7, reward:'50% 할인권 + 미니CD + 포토북', couponKey:'discount50', qty:1, notified:false }
+            ];
+            newBoard.milestones.forEach(m => {
+              if (newBoard.currentCount >= m.at && !m.notified) {
+                m.notified = true;
+              }
+            });
+          }
+        }
+      }
+      saveStampBoards(boards);
+    }
+    showToast('기록이 수정되었습니다');
+  } else {
+    records.push(record);
+    if (stampBoardId) {
+      const toastMsg = applyStampToBoard(stampBoardId, stampQty, date, `${alex} · ${philo} 관람 연동`);
+      // 방금 추가된 history에 recordId 심기 (수정 시 정확한 삭제를 위해)
+      const boards2 = getStampBoards();
+      const board2  = boards2.find(b => b.id === stampBoardId);
+      if (board2 && board2.history && board2.history.length) {
+        board2.history[board2.history.length - 1].recordId = record.id;
+        saveStampBoards(boards2);
+      }
+      showToast(toastMsg || '기록이 추가되었습니다');
+    } else {
+      showToast('기록이 추가되었습니다');
+    }
+  }
+  saveRecords(records);
+  closePanel('overlay-record');
+  refreshCurrentPage();
+}
+
+// ============================================================
+// RECORD DETAIL
+// ============================================================
+let currentDetailId = null;
+function openDetail(id) {
+  currentDetailId = id;
+  const r = getRecords().find(x=>x.id===id);
+  if (!r) return;
+  const dow = ['일','월','화','수','목','금','토'];
+  const d = new Date(r.date+'T00:00:00');
+  const bookedBadge = r.isBooked===false ? '<span style="font-size:11px;color:var(--text3);margin-left:6px;">미정</span>' : '<span style="font-size:11px;color:var(--success);margin-left:6px;">✅ 예매확정</span>';
+  document.getElementById('detail-title').innerHTML = `${r.date} (${dow[d.getDay()]}) ${r.time}${bookedBadge}`;
+  let html = `<div class="casting-display"><div class="casting-tag sky">김우진 ${r.alex}</div><div class="casting-tag philo">윤심덕 ${r.philo}</div></div>`;
+  if (r.rating) html += `<div class="detail-field"><div class="detail-field-label">별점</div><div style="color:var(--star);font-size:20px;">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div></div>`;
+  if (r.comment) html += `<div class="detail-field"><div class="detail-field-label">한줄 코멘트</div><div class="detail-field-value">${r.comment}</div></div>`;
+  if (r.seatZone) {
+    html += `<div class="detail-field"><div class="detail-field-label">좌석</div><div class="detail-field-value">${r.seatZone}열 ${r.seatNumber}번</div></div>`;
+    html += buildMiniSeat(r.seatZone, r.seatRow, r.seatNumber);
+  }
+  if (r.price != null && r.price !== '') html += `<div class="detail-field"><div class="detail-field-label">티켓 가격</div><div class="detail-field-value">₩${r.price.toLocaleString()}${r.discountType ? ` <span style="font-size:11px;color:var(--accent);background:var(--accent-light);padding:2px 6px;border-radius:4px;margin-left:4px;">${DISCOUNT_LABEL[r.discountType] || r.discountType}</span>` : ''}</div></div>`;
+  if (r.stampBoardId) {
+    const boards = getStampBoards();
+    const board  = boards.find(b => b.id === r.stampBoardId);
+    if (board) {
+      recalcStampCount(board);
+      // 날짜 오름차순 누적합으로 이 회차의 순번 계산
+      const sorted = [...(board.history||[])].sort((a,z) => a.date.localeCompare(z.date));
+      let cumulative = 0, seq = null;
+      for (const h of sorted) {
+        // qty 필드 기준으로만 계산 (recalcStampCount와 동일한 로직)
+        const hQty = h.qty ?? 1;
+        const isThisRecord = h.recordId ? h.recordId === r.id : h.date === r.date;
+        if (isThisRecord && seq === null) seq = cumulative + 1;
+        cumulative += hQty;
+      }
+      if (seq === null) seq = board.currentCount;
+      const qty = r.stampQty || 1;
+      const seqLabel = qty > 1 ? `[${seq}~${seq+qty-1}번째 도장] ×${qty}` : `${seq}번째 도장`;
+      html += `<div class="detail-field"><div class="detail-field-label">다관람 카드</div><div class="detail-field-value">[🎫 ${board.name}] ${seqLabel}</div></div>`;
+    }
+  }
+  if (r.memo) html += `<div class="detail-field"><div class="detail-field-label">감상 메모</div><div class="detail-field-value" style="font-size:14px;line-height:1.6;white-space:pre-wrap;">${r.memo}</div></div>`;
+  document.getElementById('detail-content').innerHTML = html;
+  openPanel('overlay-detail');
+}
+
+// 사의 찬미 좌석 구성: 행별 (left 석수, right 석수, left 시작번, right 시작번)
+const SEAT_ROWS = {
+  A:{ left:10, right:10, lStart:1, rStart:11 },
+  B:{ left:10, right:9,  lStart:1, rStart:11 },
+  C:{ left:10, right:10, lStart:1, rStart:11 },
+  D:{ left:10, right:9,  lStart:1, rStart:11 },
+  E:{ left:7,  right:10, lStart:1, rStart:8  },
+  F:{ left:7,  right:10, lStart:1, rStart:8  },
+  G:{ left:7,  right:10, lStart:1, rStart:8  },
+  H:{ left:9,  right:10, lStart:1, rStart:10 },
+  I:{ left:9,  right:10, lStart:1, rStart:10 },
+  J:{ left:9,  right:10, lStart:1, rStart:10 },
+  K:{ left:9,  right:9,  lStart:1, rStart:10 },
+  L:{ left:7,  right:0,  lStart:1, rStart:0  }
+};
+const MAX_LEFT  = 10;
+const MAX_RIGHT = 10;
+
+function buildMiniSeat(zone, _row, num) {
+  const rowKeys = ['A','B','C','D',null,'E','F','G','H','I','J','K','L']; // null = aisle
+  let html = '<div style="overflow-x:auto;margin:8px 0;display:flex;justify-content:center;"><div style="display:flex;flex-direction:column;gap:2px;width:max-content;">';
+  rowKeys.forEach(r => {
+    if (r === null) {
+      html += '<div style="height:4px;"></div>'; // aisle gap between D and E
+      return;
+    }
+    const cfg = SEAT_ROWS[r];
+    const isTargetRow = r === zone;
+    html += '<div style="display:flex;gap:2px;align-items:center;">';
+    // left padding
+    for (let i = 0; i < MAX_LEFT - cfg.left; i++) html += '<div style="width:10px;height:10px;visibility:hidden;flex-shrink:0;"></div>';
+    // left seats
+    for (let n = cfg.lStart; n < cfg.lStart + cfg.left; n++) {
+      const hl = isTargetRow && n === parseInt(num);
+      html += `<div style="width:10px;height:10px;border-radius:2px;flex-shrink:0;background:${hl ? 'var(--accent)' : 'var(--bg3)'};border:1px solid ${hl ? 'var(--accent)' : 'var(--border)'};${hl ? 'box-shadow:0 0 4px var(--accent);' : ''}"></div>`;
+    }
+    // row label
+    html += `<div style="width:18px;font-size:9px;color:${isTargetRow?'var(--accent)':'var(--text3)'};text-align:center;font-weight:${isTargetRow?'700':'400'};flex-shrink:0;">${r}</div>`;
+    // right seats
+    for (let n = cfg.rStart; n < cfg.rStart + cfg.right; n++) {
+      const hl = isTargetRow && n === parseInt(num);
+      html += `<div style="width:10px;height:10px;border-radius:2px;flex-shrink:0;background:${hl ? 'var(--accent)' : 'var(--bg3)'};border:1px solid ${hl ? 'var(--accent)' : 'var(--border)'};${hl ? 'box-shadow:0 0 4px var(--accent);' : ''}"></div>`;
+    }
+    // right padding
+    for (let i = 0; i < MAX_RIGHT - cfg.right; i++) html += '<div style="width:10px;height:10px;visibility:hidden;flex-shrink:0;"></div>';
+    html += '</div>';
+  });
+  return html + '</div></div>';
+}
+
+function editCurrentRecord()   { if (currentDetailId) editRecord(currentDetailId); }
+function deleteCurrentRecord() {
+  if (!currentDetailId) return;
+  if (!confirm('이 기록을 삭제하시겠습니까?')) return;
+  const records = getRecords();
+  const target  = records.find(x => x.id === currentDetailId);
+  // 쿠폰 count는 records 기반 실시간 계산 — 별도 복원 처리 불필요
+  // 도장판 이력 복원 — 전체 보드 순회 (v1 import 시 여러 보드에 recordId가 심길 수 있음)
+  if (target) {
+    const boards = getStampBoards();
+    let stampChanged = false;
+    boards.forEach(board => {
+      if (!board.history) return;
+      const before = board.history.length;
+      // recordId 기준으로 삭제 (전체 보드 대상)
+      board.history = board.history.filter(h => h.recordId !== target.id);
+      // stampBoardId 보드는 recordId 없는 구형 데이터를 위해 date 폴백 추가
+      if (board.id === target.stampBoardId && board.history.length === before) {
+        const idx = board.history.map((h,i)=>({h,i})).reverse()
+          .find(({h}) => h.date === target.date);
+        if (idx !== undefined) board.history.splice(idx.i, 1);
+      }
+      if (board.history.length !== before) {
+        recalcStampCount(board);
+        revalidateMilestones(board);
+        stampChanged = true;
+      }
+    });
+    if (stampChanged) saveStampBoards(boards);
+  }
+  saveRecords(records.filter(x => x.id !== currentDetailId));
+  closePanel('overlay-detail');
+  renderCouponList();
+  showToast('기록이 삭제되었습니다');
+  refreshCurrentPage();
+}
+
+// ============================================================
+// HOME
+// ============================================================
+function toggleHomeStamps() {
+  const wrap = document.getElementById('home-stamps-wrap');
+  const icon = document.getElementById('home-stamps-toggle-icon');
+  if (!wrap) return;
+  const collapsed = wrap.style.display === 'none';
+  wrap.style.display = collapsed ? '' : 'none';
+  icon.textContent   = collapsed ? '▲' : '▼';
+  // 상태 저장
+  DB.set('homeStampsCollapsed', !collapsed);
+}
+
+function toggleCouponHistory() {
+  const wrap = document.getElementById('coupon-history-wrap');
+  const icon = document.getElementById('coupon-history-toggle-icon');
+  if (!wrap) return;
+  const collapsed = wrap.style.display === 'none';
+  wrap.style.display = collapsed ? '' : 'none';
+  icon.textContent   = collapsed ? '▲' : '▼';
+  DB.set('couponHistoryCollapsed', !collapsed);
+}
+
+function renderHome() {
+  const records = getRecords();
+  const today   = localDate();
+  const dow     = ['일','월','화','수','목','금','토'];
+
+  // 교신일지 접힘 상태 복원
+  const stampsCollapsed = DB.get('homeStampsCollapsed', false);
+  const stampsWrap = document.getElementById('home-stamps-wrap');
+  const stampsIcon = document.getElementById('home-stamps-toggle-icon');
+  if (stampsWrap) stampsWrap.style.display = stampsCollapsed ? 'none' : '';
+  if (stampsIcon) stampsIcon.textContent   = stampsCollapsed ? '▼' : '▲';
+
+  // 예매확정 + 미정 포함 미래 일정
+  const upcoming = records
+    .filter(r => r.date >= today)
+    .sort((a,b) => a.date.localeCompare(b.date)||a.time.localeCompare(b.time));
+
+  const nextShow = upcoming[0];
+  const rest     = upcoming.filter(r => r !== nextShow);
+
+  // ① D-day 카드
+  if (nextShow) {
+    const d     = new Date(nextShow.date+'T00:00:00');
+    const todayD = new Date(today+'T00:00:00');
+    const diff  = Math.round((d-todayD)/86400000);
+    const dday  = diff===0 ? 'D-DAY' : `D-${diff}`;
+    const seat  = nextShow.seatZone ? `${nextShow.seatZone}열 ${nextShow.seatNumber}번` : '';
+    document.getElementById('home-next-show').innerHTML = `
+      <div class="next-show-card" onclick="openDetail('${nextShow.id}')">
+        <div class="next-show-dday${diff===0?' today-dday':''}">${dday}${nextShow.isBooked===false ? ' <span style="font-size:14px;opacity:0.7;font-weight:400;">미정</span>' : ''}</div>
+        <div class="next-show-date">${nextShow.date} (${dow[d.getDay()]}) ${nextShow.time}</div>
+        <div class="next-show-casting">
+          <span class="next-show-pill sky">김우진 ${nextShow.alex}</span>
+          <span class="next-show-pill philo">윤심덕 ${nextShow.philo}</span>
+        </div>
+        ${seat ? `<div class="next-show-seat">${seat}</div>` : ''}
+      </div>`;
+  } else {
+    document.getElementById('home-next-show').innerHTML = `
+      <div class="card" style="text-align:center;color:var(--text3);padding:20px;">
+        <div style="font-size:24px;margin-bottom:6px;">✈</div>
+        <div style="font-size:13px;">예매 확정된 일정이 없습니다</div>
+      </div>`;
+  }
+
+  // ② 나머지 예정 일정 리스트
+  const upcomingCard = document.getElementById('home-upcoming-card');
+  if (rest.length > 0) {
+    upcomingCard.style.display = '';
+    document.getElementById('home-upcoming').innerHTML = rest.map(r => {
+      const d2   = new Date(r.date+'T00:00:00');
+      const todayD2 = new Date(today+'T00:00:00');
+      const diff2 = Math.round((d2-todayD2)/86400000);
+      const dday2 = diff2===0 ? 'D-DAY' : `D-${diff2}`;
+      const seat2 = r.seatZone ? `${r.seatZone}열 ${r.seatNumber}번` : '';
+      return `<div class="upcoming-item" onclick="openDetail('${r.id}')">
+        <div class="upcoming-dday" style="${r.isBooked===false ? 'color:var(--text3);' : ''}">${dday2}</div>
+        <div class="upcoming-date">${r.date.slice(5)} (${dow[d2.getDay()]}) ${r.time}</div>
+        ${seat2 ? `<div class="upcoming-seat">${seat2}</div>` : ''}
+        <div class="upcoming-cast">${r.alex} · ${r.philo}${r.isBooked===false ? ' <span style="font-size:10px;color:var(--text3);">미정</span>' : ''}</div>
+      </div>`;
+    }).join('');
+  } else {
+    upcomingCard.style.display = 'none';
+  }
+
+  // ③ 도장판
+  const boards = getStampBoards();
+  document.getElementById('home-stamps').innerHTML = boards.length===0
+    ? `<div style="color:var(--text3);font-size:13px;text-align:center;padding:8px;">도장판이 없습니다</div>`
+    : boards.map(b => {
+        const { cur, final } = calcStampCounts(b);
+        const scheduledPct = Math.min(100, Math.round(final / b.totalSlots * 100));
+        const actualPct    = Math.min(100, Math.round(cur   / b.totalSlots * 100));
+        const done = cur >= b.totalSlots;
+        return `<div class="home-stamp-row">
+          <div class="home-stamp-name">[📡 ${b.name}]${done?' 🎉':''}</div>
+          <div class="home-stamp-bar">
+            <div class="home-stamp-bar-fill scheduled" style="width:${scheduledPct}%"></div>
+            <div class="home-stamp-bar-fill actual"    style="width:${actualPct}%"></div>
+          </div>
+          <div class="home-stamp-count">현재:${cur} / 예정:${final}</div>
+        </div>`;
+      }).join('');
+
+  // ④ 쿠폰
+  const coupons = getCoupons();
+  const todayStr = localDate();
+  // 잔여: 오늘까지 기준 / 최종: 미달성 milestone 포함 전체
+  function homeCouponFinal(key) {
+    const cur = calcCouponCount(key, coupons, boards, records);
+    // 입력된 도장 총합(날짜 무관)이 milestone.at 이상인 경우만 future로 카운트
+    const future = boards.reduce((sum, b) => {
+      const totalEntered = (b.history||[]).reduce((t, h) => t + (h.qty||1), 0);
+      return sum + (b.milestones||[]).filter(m =>
+        m.couponKey === key && !m.notified && totalEntered >= m.at
+      ).reduce((s, m) => s + (m.qty || 1), 0);
+    }, 0);
+    return cur + future;
+  }
+  const c40    = calcCouponCount('discount40',   coupons, boards, records, todayStr);
+  const c50    = calcCouponCount('discount50',   coupons, boards, records, todayStr);
+  const cPass  = calcCouponCount('discountPass', coupons, boards, records, todayStr);
+  const f40    = homeCouponFinal('discount40');
+  const f50    = homeCouponFinal('discount50');
+  const fPass  = homeCouponFinal('discountPass');
+  const homeCouponItems = [
+    { key:'discount40',   label:'40% 할인권', cur:c40,   final:f40   },
+    { key:'discount50',   label:'50% 할인권', cur:c50,   final:f50   },
+    { key:'discountPass', label:'증빙패스',   cur:cPass, final:fPass  }
+  ];
+  document.getElementById('home-coupons').innerHTML =
+    `<div class="coupon-cards">${homeCouponItems.map(item => {
+      const earned = (coupons[item.key].history||[]).filter(h=>h.type==='획득'||h.type==='복원').reduce((s,h)=>s+(h.qty||1),0)
+        + boards.reduce((s,b)=>s+(b.milestones||[]).filter(m=>m.couponKey===item.key&&m.notified).reduce((t,m)=>t+(m.qty||1),0),0);
+      const used   = records.filter(r=>(DISCOUNT_COUPON_MAP[r.discountType]||null)===item.key).length
+        + (coupons[item.key].history||[]).filter(h=>h.type==='사용').reduce((s,h)=>s+(h.qty||1),0);
+      return `<div class="coupon-card">
+        <div class="coupon-card-label">${item.label}</div>
+        <div class="coupon-card-sub-row">
+          <div class="coupon-card-sub">현재</div>
+          <div class="coupon-card-sub">최종</div>
+        </div>
+        <div class="coupon-card-num-row">
+          <div class="coupon-card-num">${item.cur}</div>
+          <div class="coupon-card-num final">${item.final}</div>
+        </div>
+        <div style="font-size:10px;color:var(--text3);text-align:center;margin-top:4px;">적립 ${earned} · 사용 ${used}</div>
+      </div>`;
+    }).join('')}</div>`;
+
+  // ⑤ 최근 관람 (이미 지난 것 또는 미정)
+  const pastAll = records
+    .filter(r => r.date < today)
+    .sort((a,b)=>b.date.localeCompare(a.date)||b.time.localeCompare(a.time));
+  const showCount = DB.get('homeRecentCount', 3);
+  const past = pastAll.slice(0, showCount);
+  document.getElementById('home-recent').innerHTML = pastAll.length===0
+    ? '<div style="text-align:center;color:var(--text3);padding:12px;font-size:13px;">기록이 없습니다</div>'
+    : past.map(r=>`
+        <div class="record-mini" onclick="openDetail('${r.id}')">
+          <div class="record-date-badge">${r.date.slice(5)} ${r.time}</div>
+          <div class="record-casting">${r.alex} · ${r.philo}</div>
+          <div class="record-rating">${r.seatZone ? r.seatZone+'열 '+r.seatNumber+'번' : ''}</div>
+        </div>`).join('');
+  const moreEl = document.getElementById('home-recent-more');
+  if (showCount < pastAll.length) {
+    const addCount = Math.min(3, pastAll.length - showCount);
+    moreEl.innerHTML = `<button class="btn btn-outline btn-sm" onclick="DB.set('homeRecentCount',${showCount+3});renderHome()">더보기 (+${addCount}건)</button>`;
+  } else if (showCount > 3) {
+    moreEl.innerHTML = `<button class="btn btn-outline btn-sm" onclick="DB.set('homeRecentCount',3);renderHome()">접기</button>`;
+  } else {
+    moreEl.innerHTML = '';
+  }
+}
+
+// ============================================================
+// CALENDAR (스케줄 통합)
+// ============================================================
+let calYear, calMonth;
+let calFilterSky  = null;
+let calFilterDidi = null;
+let calSelectedDs = null;
+
+function initCal() {
+  const schedule = getSchedule();
+  const today = localDate();
+  // 오늘 이후 스케줄이 있으면 첫 회차 기준, 없으면 현재 월
+  const upcoming = schedule.filter(s => s.date >= today).sort((a,b) => a.date.localeCompare(b.date));
+  const base = upcoming.length ? upcoming[0].date : (schedule.length ? schedule[0].date : today);
+  calYear  = parseInt(base.slice(0,4));
+  calMonth = parseInt(base.slice(5,7)) - 1;
+}
+function calPrev() { calMonth--; if(calMonth<0){calMonth=11;calYear--;} calSelectedDs=null; renderCalendar(); }
+function calNext() { calMonth++; if(calMonth>11){calMonth=0;calYear++;} calSelectedDs=null; renderCalendar(); }
+
+function setCalFilterSky(name, btn) {
+  calFilterSky = name;
+  document.querySelectorAll('#cal-chips-sky .cal-chip').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  updateCalFilterHint();
+  renderCalendar();
+}
+function setCalFilterDidi(name, btn) {
+  calFilterDidi = name;
+  document.querySelectorAll('#cal-chips-philo .cal-chip').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  updateCalFilterHint();
+  renderCalendar();
+}
+function updateCalFilterHint() {
+  const el = document.getElementById('cal-filter-hint');
+  if (!el) return;
+  const hasFilter = calFilterSky || calFilterDidi;
+  el.textContent = hasFilter
+    ? `· ${[calFilterSky, calFilterDidi].filter(Boolean).join(' · ')} 회차 표시 중`
+    : '· 전체 회차 표시 중';
+}
+
+function getEventsForDate(ds, events) {
+  return events.filter(ev => ev.startDate <= ds && ds <= ev.endDate);
+}
+
+function applyCalFilterUI() {
+  function syncRow(containerId, val) {
+    document.querySelectorAll(`#${containerId} .cal-chip`).forEach(b => {
+      const bName = b.dataset.name;
+      const matches = (val === null && bName === '') || bName === val;
+      b.classList.toggle('active', matches);
+    });
+  }
+  syncRow('cal-chips-sky',  calFilterSky);
+  syncRow('cal-chips-philo', calFilterDidi);
+  updateCalFilterHint();
+}
+
+function fixRecordTimings() {
+  const schedule = getSchedule();
+  const schByDate = {};
+  schedule.forEach(s => {
+    if (!schByDate[s.date]) schByDate[s.date] = [];
+    schByDate[s.date].push(s);
+  });
+  Object.values(schByDate).forEach(arr => arr.sort((a,b) => a.time.localeCompare(b.time)));
+  const recs = getRecords();
+  let fixed = 0;
+  recs.forEach(r => {
+    if (r.time && r.alex && r.philo) return;
+    const shows = schByDate[r.date] || [];
+    if (!shows.length) return;
+    let show = r.time ? shows.find(s => s.time === r.time) : null;
+    if (!show && shows.length === 1) show = shows[0];
+    if (!show) return;
+    if (!r.time)   r.time   = show.time;
+    if (!r.alex) r.alex = show.alex || '';
+    if (!r.philo)   r.philo   = show.philo   || '';
+    fixed++;
+  });
+  saveRecords(recs);
+  renderHome(); renderCalendar(); renderStats();
+  showToast(fixed ? `✅ ${fixed}건 자동 보완 완료` : '보완할 기록 없음');
+}
+
+function renderCalendar() {
+  if (calYear===undefined) initCal();
+  applyCalFilterUI();
+  const records  = getRecords();
+  const schedule = getSchedule();
+  const events   = getEvents();
+
+  const schByDate = {};
+  schedule.forEach(s => {
+    if (!schByDate[s.date]) schByDate[s.date] = [];
+    schByDate[s.date].push(s);
+  });
+
+  const recordDates = new Set(records.map(r => r.date));
+  const bookedDates = new Set(records.filter(r => r.isBooked!==false).map(r => r.date));
+  const doneSet     = new Set(records.map(r => `${r.date}-${r.time}`));
+  const bookedSet   = new Set(records.filter(r => r.isBooked!==false).map(r => `${r.date}-${r.time}`));
+
+  const dow    = ['일','월','화','수','목','금','토'];
+  const months = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+  document.getElementById('cal-title').textContent = `${calYear}년 ${months[calMonth]}`;
+
+  const firstDay   = new Date(calYear, calMonth, 1).getDay();
+  const lastDate   = new Date(calYear, calMonth+1, 0).getDate();
+  const todayStr   = localDate();
+  const totalCells = firstDay + lastDate;
+  const weeks      = Math.ceil(totalCells / 7);
+  const monthStr   = `${calYear}-${String(calMonth+1).padStart(2,'0')}`;
+  const monthStart = `${monthStr}-01`;
+  const monthEnd   = `${monthStr}-${String(lastDate).padStart(2,'0')}`;
+
+  // 이벤트 segments — 행별 겹침 방지 (max 3행)
+  const segments = [];
+  events.forEach(ev => {
+    if (ev.endDate < monthStart || ev.startDate > monthEnd) return;
+    const clampedStart = ev.startDate < monthStart ? monthStart : ev.startDate;
+    const clampedEnd   = ev.endDate   > monthEnd   ? monthEnd   : ev.endDate;
+    const startCell = firstDay + parseInt(clampedStart.slice(8)) - 1;
+    const endCell   = firstDay + parseInt(clampedEnd.slice(8))   - 1;
+    for (let w = Math.floor(startCell/7); w <= Math.floor(endCell/7); w++) {
+      const sc = Math.max(startCell, w*7) % 7;
+      const ec = Math.min(endCell,   w*7+6) % 7;
+      // 이 week에서 겹치지 않는 가장 낮은 row 찾기 (max 3)
+      const used = segments.filter(s => s.week === w);
+      let row = 0;
+      while (row < 3) {
+        const conflict = used.filter(s => s.row === row).some(s =>
+          !(ec < s.startCol || sc > s.endCol)
+        );
+        if (!conflict) break;
+        row++;
+      }
+      if (row < 3) segments.push({ week: w, startCol: sc, endCol: ec, color: ev.color, name: ev.name, row });
+    }
+  });
+
+  let html = `<div class="cal-grid">${dow.map(d=>`<div class="cal-dow">${d}</div>`).join('')}</div>`;
+
+  for (let w = 0; w < weeks; w++) {
+    const wSegs = segments.filter(s => s.week === w);
+    const maxRow = wSegs.length ? Math.max(...wSegs.map(s => s.row)) + 1 : 0;
+    const evHeight = maxRow * 17; // 이벤트 행 높이 (셀 내 스페이서용)
+
+    // ① 날짜 행 (날짜 숫자 + 이벤트 스페이서 + 회차)
+    html += '<div class="cal-grid" style="position:relative;">';
+    for (let col = 0; col < 7; col++) {
+      const cell = w*7+col;
+      const day  = cell-firstDay+1;
+      if (cell < firstDay || day > lastDate) { html += '<div class="cal-day empty"></div>'; continue; }
+
+      const ds   = `${monthStr}-${String(day).padStart(2,'0')}`;
+      const dow2 = new Date(calYear, calMonth, day).getDay();
+      const daySch = schByDate[ds] || [];
+      const filteredDaySch = daySch.filter(s =>
+        (!calFilterSky  || s.alex === calFilterSky) &&
+        (!calFilterDidi || s.philo   === calFilterDidi)
+      );
+
+      let cls = 'cal-day';
+      if (ds === todayStr)      cls += ' today';
+      if (dow2 === 0)           cls += ' sun';
+      else if (dow2 === 6)      cls += ' sat';
+      if (ds === calSelectedDs) cls += ' selected';
+
+      let sessionHtml = '';
+      if (filteredDaySch.length) {
+        sessionHtml = filteredDaySch
+          .sort((a,b) => a.time.localeCompare(b.time))
+          .map(s => {
+            const key = `${ds}-${s.time}`;
+            const isBooked = bookedSet.has(key);
+            const isDone   = doneSet.has(key);
+            const chipCls  = isBooked ? 'cal-session-chip booked' : isDone ? 'cal-session-chip done' : 'cal-session-chip';
+            const icon     = isDone ? '✅' : '';
+            return `<div class="${chipCls}"><span class="cs-icon">${icon}</span><span class="cs-time">${s.time}</span></div>`;
+          }).join('');
+      }
+
+      html += `<div class="${cls}" onclick="calDayClick('${ds}')">
+        <span class="cal-day-num">${day}</span>
+        <div style="height:${evHeight}px;flex-shrink:0;"></div>
+        ${sessionHtml}
+      </div>`;
+    }
+
+    // ② 이벤트 오버레이 — 날짜 숫자(약 20px) 바로 아래, 셀 그리드 위에 절대 위치
+    if (maxRow > 0) {
+      html += `<div style="position:absolute;top:20px;left:0;right:0;pointer-events:none;">`;
+      for (let row = 0; row < maxRow; row++) {
+        html += `<div style="position:relative;height:16px;margin-bottom:1px;">`;
+        wSegs.filter(s => s.row === row).forEach(s => {
+          const leftPct  = (s.startCol / 7 * 100).toFixed(2);
+          const widthPct = ((s.endCol - s.startCol + 1) / 7 * 100).toFixed(2);
+          html += `<div style="position:absolute;left:${leftPct}%;width:calc(${widthPct}% - 3px);height:14px;background:${s.color};border-radius:3px;display:flex;align-items:center;padding:0 4px;overflow:hidden;">
+            <span style="font-size:9px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${s.name}</span>
+          </div>`;
+        });
+        html += `</div>`;
+      }
+      html += `</div>`;
+    }
+
+    html += '</div>'; // cal-grid
+  }
+
+  document.getElementById('cal-wrap').innerHTML = html;
+
+  if (calSelectedDs) {
+    renderCalDayPanel(calSelectedDs, schByDate[calSelectedDs]||[], doneSet, bookedSet, records);
+  } else {
+    document.getElementById('cal-day-records').innerHTML = '';
+  }
+}
+
+function calDayClick(ds) {
+  if (calSelectedDs === ds) {
+    calSelectedDs = null;
+    document.getElementById('cal-day-records').innerHTML = '';
+    renderCalendar();
+    return;
+  }
+  calSelectedDs = ds;
+  renderCalendar();
+}
+
+function renderCalDayPanel(ds, daySch, doneSet, bookedSet, records) {
+  const dow  = ['일','월','화','수','목','금','토'];
+  const d    = new Date(ds+'T00:00:00');
+  const dateLabel = `${parseInt(ds.slice(5,7))}월 ${parseInt(ds.slice(8,10))}일 (${dow[d.getDay()]})`;
+  const dayRecords = records.filter(r => r.date === ds);
+
+  let html = `<div class="cal-day-panel"><div class="cal-day-panel-title">${dateLabel}</div>`;
+
+  const sorted = [...daySch].sort((a,b) => a.time.localeCompare(b.time));
+  if (sorted.length) {
+    sorted.forEach(s => {
+      const key      = `${ds}-${s.time}`;
+      const isDone   = doneSet.has(key);
+      const isBooked = bookedSet.has(key);
+      const recs     = dayRecords.filter(r => r.time === s.time);
+      const badge    = isBooked ? '<span class="cal-session-badge booked">✓ 예매확정</span>'
+                     : isDone   ? '<span class="cal-session-badge done">✅</span>' : '';
+      const btn      = recs.length === 0
+        ? `<button class="cal-session-add" onclick="openAddRecordFromSchedule('${ds}','${s.time}','${s.alex}','${s.philo}')">+ 기록</button>`
+        : recs.map((r,i) => `<button class="cal-session-add" onclick="openDetail('${r.id}')">${recs.length > 1 ? `상세${i+1}` : '상세'}</button>`).join('');
+      html += `<div class="cal-session-row">
+        <div class="cal-session-time">${s.time}</div>
+        <div class="cal-session-casting"><span class="sky">${s.alex}</span> · <span class="philo">${s.philo}</span></div>
+        ${badge}${btn}
+      </div>`;
+    });
+  } else if (dayRecords.length) {
+    dayRecords.sort((a,b)=>a.time.localeCompare(b.time)).forEach(r => {
+      html += `<div class="cal-session-row">
+        <div class="cal-session-time">${r.time}</div>
+        <div class="cal-session-casting"><span class="sky">${r.alex}</span> · <span class="philo">${r.philo}</span></div>
+        <span class="cal-session-badge done">✅</span>
+        <button class="cal-session-add" onclick="openDetail('${r.id}')">상세</button>
+      </div>`;
+    });
+  } else {
+    html += '<div style="padding:12px 14px;color:var(--text3);font-size:13px;">스케줄 없는 날</div>';
+  }
+
+  html += `<div style="padding:10px 14px 14px;">
+    <button class="btn btn-primary btn-sm" style="width:100%;" onclick="openAddRecord('${ds}')">+ 이 날 기록 추가</button>
+  </div></div>`;
+  document.getElementById('cal-day-records').innerHTML = html;
+}
+
+function openAddRecordFromSchedule(date, time, alex, philo) {
+  openAddRecord(date);
+  setTimeout(() => {
+    const timeEl = document.getElementById('rec-time');
+    if (timeEl) timeEl.value = time;
+    const skyEl = document.getElementById('rec-alex');
+    if (skyEl) { skyEl.value = alex; skyEl.dispatchEvent(new Event('change')); }
+    const philoEl = document.getElementById('rec-philo');
+    if (philoEl) { philoEl.value = philo; philoEl.dispatchEvent(new Event('change')); }
+  }, 0);
+}
+
+
+// ============================================================
+// STATS (지출만 blur)
+// ============================================================
+let moneyBlurred = true;
+function toggleMoneyBlur() {
+  moneyBlurred = !moneyBlurred;
+  const el  = document.getElementById('money-blur');
+  const btn = document.getElementById('money-reveal-btn');
+  if (moneyBlurred) { el.classList.add('blurred'); btn.textContent='👁👁'; }
+  else              { el.classList.remove('blurred'); btn.textContent='다시 숨기기 😌'; }
+}
+
+function renderStats() {
+  const records  = getRecords();
+  const schedule = getSchedule();
+  const sky  = ['김우진','김우진','김우진'];
+  const philo = ['윤심덕','윤심덕','윤심덕'];
+  const countAct = (f,n) => records.filter(r=>r[f]===n).length;
+  const countSch = (f,n) => schedule.filter(s=>s[f]===n).length;
+
+  let ah = `<tr><th colspan="3" class="role-section-title">김우진</th></tr><tr><th>배우</th><th>총 회차</th><th>관람</th></tr>`;
+  sky.forEach(a  => { ah += `<tr><td>${a}</td><td style="color:var(--text3)">${countSch('alex',a)}</td><td>${countAct('alex',a)}</td></tr>`; });
+  ah += `<tr><th colspan="3" class="role-section-title">윤심덕</th></tr><tr><th>배우</th><th>총 회차</th><th>관람</th></tr>`;
+  philo.forEach(a => { ah += `<tr><td>${a}</td><td style="color:var(--text3)">${countSch('philo',a)}</td><td>${countAct('philo',a)}</td></tr>`; });
+  document.getElementById('stats-actors').innerHTML = ah;
+
+  const pairs = [
+    ['김우진','윤심덕'],['김우진','윤심덕'],['김우진','윤심덕'],
+    ['김우진','윤심덕'],['김우진','윤심덕'],['김우진','윤심덕'],
+    ['김우진','윤심덕'],['김우진','윤심덕'],['김우진','윤심덕']
+  ];
+  let ph = '<tr><th>김우진</th><th>윤심덕</th><th>총 회차</th><th>관람</th></tr>';
+  pairs.forEach(([s,d]) => {
+    const tot = schedule.filter(x=>x.alex===s&&x.philo===d).length;
+    const seen = records.filter(r=>r.alex===s&&r.philo===d).length;
+    if (tot>0||seen>0) ph += `<tr><td>${s}</td><td>${d}</td><td style="color:var(--text3)">${tot}</td><td>${seen}</td></tr>`;
+  });
+  if (!ph.includes('<td>')) ph += '<tr><td colspan="4" style="text-align:center;color:var(--text3);padding:12px;">기록 없음</td></tr>';
+  document.getElementById('stats-pairs').innerHTML = ph;
+
+  renderHeatmap();
+
+  const paid  = records.filter(r=>r.price != null && r.price !== '');
+  const total = paid.reduce((s,r)=>s+(r.price||0),0);
+  const avg   = paid.length ? Math.round(total/paid.length) : 0;
+  document.getElementById('stats-money').innerHTML = `
+    <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)"><span style="color:var(--text2)">총 지출</span><span style="font-weight:700;">₩${total.toLocaleString()}</span></div>
+    <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)"><span style="color:var(--text2)">평균 티켓가</span><span style="font-weight:700;">₩${avg.toLocaleString()}</span></div>
+    <div style="display:flex;justify-content:space-between;padding:8px 0"><span style="color:var(--text2)">유료 관람 횟수</span><span style="font-weight:700;">${paid.length}회</span></div>`;
+
+  // maintain blur state
+  const blurEl = document.getElementById('money-blur');
+  if (moneyBlurred) blurEl.classList.add('blurred'); else blurEl.classList.remove('blurred');
+}
+
+function renderHeatmap() {
+  const records = getRecords();
+  const seatMap = {};
+  records.forEach(r => {
+    if (r.seatZone && r.seatNumber) {
+      const k = `${r.seatZone}-${r.seatNumber}`;
+      seatMap[k] = (seatMap[k]||0) + 1;
+    }
+  });
+  const cls = c => !c?'': c>=5?'v5':'v'+c;
+  const rowKeys = ['A','B','C','D',null,'E','F','G','H','I','J','K','L']; // null = aisle
+  // cell=14px, gap=1px, label=20px
+  const C = 14, GAP = 1, LBL = 20;
+
+  let html = '<div style="display:flex;flex-direction:column;gap:2px;">';
+
+  // header row
+  const leftPad  = MAX_LEFT * (C + GAP);
+  const rightPad = MAX_RIGHT * (C + GAP);
+  html += `<div style="display:flex;gap:${GAP}px;align-items:center;margin-bottom:2px;">
+    <div style="width:${leftPad}px;text-align:center;font-size:9px;color:var(--text3);">← 무대쪽</div>
+    <div style="width:${LBL}px;"></div>
+    <div style="width:${rightPad}px;text-align:center;font-size:9px;color:var(--text3);">무대쪽 →</div>
+  </div>`;
+
+  rowKeys.forEach(r => {
+    if (r === null) {
+      html += `<div style="height:6px;"></div>`; // aisle gap between D and E
+      return;
+    }
+    const cfg = SEAT_ROWS[r];
+    html += `<div style="display:flex;gap:${GAP}px;align-items:center;">`;
+    // left padding (invisible)
+    for (let i = 0; i < MAX_LEFT - cfg.left; i++) {
+      html += `<div class="seat-cell" style="visibility:hidden;width:${C}px;height:${C}px;"></div>`;
+    }
+    // left seats
+    for (let n = cfg.lStart; n < cfg.lStart + cfg.left; n++) {
+      const k = `${r}-${n}`, cnt = seatMap[k]||0, c = cls(cnt);
+      html += `<div class="seat-cell${c?' '+c:''}" style="width:${C}px;height:${C}px;" title="${r}열 ${n}번 ${cnt}회"></div>`;
+    }
+    // row label
+    html += `<div style="width:${LBL}px;text-align:center;font-size:9px;color:var(--text3);font-weight:700;flex-shrink:0;">${r}</div>`;
+    // right seats
+    for (let n = cfg.rStart; n < cfg.rStart + cfg.right; n++) {
+      const k = `${r}-${n}`, cnt = seatMap[k]||0, c = cls(cnt);
+      html += `<div class="seat-cell${c?' '+c:''}" style="width:${C}px;height:${C}px;" title="${r}열 ${n}번 ${cnt}회"></div>`;
+    }
+    // right padding (invisible)
+    for (let i = 0; i < MAX_RIGHT - cfg.right; i++) {
+      html += `<div class="seat-cell" style="visibility:hidden;width:${C}px;height:${C}px;"></div>`;
+    }
+    html += '</div>';
+  });
+  html += '</div>';
+  document.getElementById('heatmap').innerHTML = html;
+}
+
+// ============================================================
+// SCHEDULE — 필터 상태 변수
+// ============================================================
+
+
+async function fetchSchedule(manual = false) {
+  const statusEl = document.getElementById('schedule-fetch-status');
+  const timeEl   = document.getElementById('schedule-update-time');
+  if (statusEl) statusEl.textContent = '스케줄 불러오는 중...';
+  try {
+    const res = await fetch('./schedule.json?t=' + Date.now());
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    if (!Array.isArray(data)) throw new Error('형식 오류');
+    saveSchedule(data);
+    const now = new Date().toLocaleString('ko-KR', { month:'numeric', day:'numeric', hour:'2-digit', minute:'2-digit' });
+    localStorage.setItem('scheduleUpdatedAt', now);
+    if (timeEl) timeEl.textContent = now;
+    if (statusEl) statusEl.textContent = `✓ ${data.length}개 회차 로드됨`;
+    if (manual) showToast(`스케줄 ${data.length}개 업데이트 완료`);
+    renderCalendar();
+    renderHome();
+  } catch (e) {
+    // 오프라인이면 캐시된 스케줄 그대로 사용
+    const cached = getSchedule();
+    const savedAt = localStorage.getItem('scheduleUpdatedAt');
+    if (timeEl) timeEl.textContent = savedAt ? `${savedAt} (캐시)` : '캐시 없음';
+    if (statusEl) statusEl.textContent = cached.length ? `오프라인 — ${cached.length}개 캐시 사용 중` : '스케줄 없음';
+    if (manual) showToast('오프라인 상태입니다');
+  }
+}
+
+async function fetchEvents(manual = false) {
+  const statusEl = document.getElementById('event-fetch-status');
+  const timeEl   = document.getElementById('event-update-time');
+  if (statusEl) statusEl.textContent = '이벤트 불러오는 중...';
+  try {
+    const res = await fetch('./events.json?t=' + Date.now());
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    if (!Array.isArray(data)) throw new Error('형식 오류');
+    saveEvents(data);
+    const now = new Date().toLocaleString('ko-KR', { month:'numeric', day:'numeric', hour:'2-digit', minute:'2-digit' });
+    localStorage.setItem('eventsUpdatedAt', now);
+    if (timeEl) timeEl.textContent = now;
+    if (statusEl) statusEl.textContent = `✓ ${data.length}개 이벤트 로드됨`;
+    if (manual) showToast(`이벤트 ${data.length}개 업데이트 완료`);
+    renderCalendar();
+  } catch (e) {
+    const cached = getEvents();
+    const savedAt = localStorage.getItem('eventsUpdatedAt');
+    if (timeEl) timeEl.textContent = savedAt ? `${savedAt} (캐시)` : '캐시 없음';
+    if (statusEl) statusEl.textContent = cached.length ? `오프라인 — ${cached.length}개 캐시 사용 중` : '이벤트 없음';
+    if (manual) showToast('오프라인 상태입니다');
+  }
+}
+
+// ============================================================
+// ACTOR PHOTOS (설정)
+// ============================================================
+const ACTOR_ROLES = [
+  { name:'김우진', role:'김우진' },
+  { name:'김우진', role:'김우진' },
+  { name:'김우진', role:'김우진' },
+  { name:'윤심덕', role:'윤심덕' },
+  { name:'윤심덕', role:'윤심덕' },
+  { name:'윤심덕', role:'윤심덕' },
+];
+
+// ============================================================
+// COUPON / STAMP
+// ============================================================
+function renderCoupon() { renderStampBoards(); renderCouponList(); }
+
+function calcStampCounts(b) {
+  // 현재: 오늘 날짜까지 찍힌 도장 수
+  // 최종: history 전체 합산 (미래 포함)
+  const today = localDate();
+  let curCount = 0, finalCount = 0;
+  (b.history || []).forEach(h => {
+    const qty = h.qty || 1;
+    finalCount += qty;
+    if (h.date <= today) curCount += qty;
+  });
+  const total = b.totalSlots;
+  return {
+    cur:   Math.min(curCount,   total),
+    final: Math.min(finalCount, total)
+  };
+}
+
+function renderStampBoards() {
+  const boards = getStampBoards();
+  boards.forEach(b => recalcStampCount(b));
+
+  const allDone = boards.length === 0 || boards.every(b => b.currentCount >= b.totalSlots);
+  let html = '';
+
+  if (allDone) {
+    html += `<div style="text-align:center;padding:12px 0 8px;">
+      <button class="btn btn-primary" onclick="openAddStampBoard()" style="width:100%;padding:14px;">
+        🆕 새 다관람 카드 시작하기
+      </button>
+      <p style="font-size:12px;color:var(--text3);margin-top:8px;">7칸 · 3칸:40%×2 · 5칸:폴라로이드 · 7칸:50%+CD</p>
+    </div>`;
+  }
+
+  if (boards.length === 0) {
+    document.getElementById('stamp-boards-list').innerHTML = html;
+    return;
+  }
+
+  const cards = boards.map(b => {
+    const total      = b.totalSlots;
+    const paused     = !!b.paused;
+    const { cur, final } = calcStampCounts(b);
+    const pct        = Math.min(100, Math.round(cur / total * 100));
+    const finalPct   = Math.min(100, Math.round(final / total * 100));
+    const mid3done   = cur >= 3;
+    const alldone    = cur >= total;
+    const milestones = b.milestones || [{ at:3 }, { at:5 }, { at:7 }];
+    const nextMs     = [...milestones].sort((a,b2)=>a.at-b2.at).find(m => cur < m.at);
+    const toNext     = nextMs ? nextMs.at - cur : null;
+    const mid5done   = cur >= 5;
+
+    let statusHtml = '';
+    if (paused)               statusHtml = `<div class="stamp-status-row stamp-status-paused">일시정지 중</div>`;
+    else if (alldone)         statusHtml = `<div class="stamp-status-row stamp-status-done">★ CD+포토북 달성!</div>`;
+    else if (mid5done)        statusHtml = `<div class="stamp-status-row stamp-status-mid">📸 폴라로이드 달성!</div>`;
+    else if (mid3done)        statusHtml = `<div class="stamp-status-row stamp-status-mid">🏷 40%할인권×2 달성!</div>`;
+    else if (toNext !== null) statusHtml = `<div class="stamp-status-row stamp-status-next">다음까지 ${toNext}개</div>`;
+
+    // progress markers for 3 milestones
+    const marker3 = (3 / total * 100).toFixed(2);
+    const marker5 = (5 / total * 100).toFixed(2);
+
+    return `<div class="stamp-board${paused ? ' paused' : ''}">
+      <div class="stamp-board-header">
+        <div class="stamp-board-name">[🎫 ${b.name}]</div>
+        <div class="stamp-board-menu">
+          <button class="stamp-menu-btn" onclick="renameStampBoard('${b.id}')" title="이름 변경">📝</button>
+          <button class="stamp-menu-btn" onclick="togglePauseStampBoard('${b.id}')" title="${paused ? '재개' : '일시정지'}">${paused ? '▶' : '⏸'}</button>
+          <button class="stamp-menu-btn danger" onclick="deleteStampBoard('${b.id}')" title="삭제">✕</button>
+        </div>
+      </div>
+      <div class="stamp-count-row">
+        <span class="stamp-count-cur">현재 ${cur}칸</span>
+        <span class="stamp-count-final">/ 최종 ${final}칸</span>
+      </div>
+      <div class="stamp-progress-wrap">
+        <div class="progress-bar" style="overflow:visible;">
+          <div class="progress-fill" style="width:${finalPct}%;background:var(--border);border-radius:6px;"></div>
+          <div class="progress-fill" style="width:${pct}%;background:${paused ? 'var(--text3)' : 'var(--accent)'};border-radius:6px;margin-top:-12px;position:relative;"></div>
+          <div class="progress-marker" style="left:calc(${marker3}% - 1px);"></div>
+          <div class="progress-marker" style="left:calc(${marker5}% - 1px);background:var(--accent);"></div>
+        </div>
+      </div>
+      ${statusHtml}
+      <div class="stamp-actions">
+        ${(!alldone && !paused) ? `<button class="btn btn-primary btn-sm" style="width:100%;" onclick="openAddStamp('${b.id}')">+ 도장 찍기</button>` : ''}
+        <button class="stamp-history-btn" onclick="openStampHistory('${b.id}')">이력 보기</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  html += `<div class="stamp-cards-grid">${cards}</div>`;
+  document.getElementById('stamp-boards-list').innerHTML = html;
+}
+
+// 이력 패널 — 선택된 도장판 이력을 고정 overlay에 표시
+let _stampHistoryPanelBoardId = null;
+let _directStampFromHistory = false;
+function openStampHistory(boardId) {
+  _stampHistoryPanelBoardId = boardId;
+  renderStampHistoryPanel();
+  openPanel('overlay-stamp-history');
+}
+
+function renderStampHistoryPanel() {
+  const boardId = _stampHistoryPanelBoardId;
+  if (!boardId) return;
+  const boards = getStampBoards();
+  const board  = boards.find(b => b.id === boardId);
+  if (!board) return;
+
+  document.getElementById('stamp-history-panel-title').textContent = `[🎫 ${board.name}] 이력`;
+  const sortedHistory = [...(board.history||[])].sort((a,z) => a.date.localeCompare(z.date));
+  const el = document.getElementById('stamp-history-panel-content');
+
+  if (!sortedHistory.length) {
+    el.innerHTML = '<div style="color:var(--text3);font-size:13px;padding:16px 0;text-align:center;">이력 없음</div>';
+    return;
+  }
+  const dow = ['일','월','화','수','목','금','토'];
+  el.innerHTML = '<div class="history-list">' + sortedHistory.map(h => {
+    const origIdx = board.history.indexOf(h);
+    const d = new Date(h.date + 'T00:00:00');
+    const dateStr = `${h.date.slice(5).replace('-','.')}(${dow[d.getDay()]})`;
+    // method에서 ×N 제거 후 qty 필드로 표시 (중복 방지)
+    const baseMethod = (h.method||'').replace(/\s*×\d+$/, '').replace(' (수정)', '');
+    const qty = h.qty || 1;
+    const qtyLabel = qty > 1 ? ` ×${qty}` : '';
+    return `<div class="history-item">
+      <div style="flex:1;">
+        <div style="font-size:12px;color:var(--text2);font-weight:500;">${dateStr}</div>
+        ${h.comment ? `<div class="history-comment">${h.comment}</div>` : ''}
+      </div>
+      <span class="history-type" style="font-size:11px;">${baseMethod}${qtyLabel}</span>
+      ${!h.recordId ? `<button class="btn-icon" style="font-size:12px;color:var(--text3);margin-left:2px;" onclick="editStampHistoryItem('${boardId}',${origIdx})">📝</button>` : ''}
+      <button class="btn-icon" style="font-size:12px;color:var(--danger);margin-left:4px;" onclick="deleteStampHistoryItemFromPanel('${boardId}',${origIdx})">✕</button>
+    </div>`;
+  }).join('') + '</div>';
+}
+
+function openAddStampHistoryDirectFromPanel() {
+  if (!_stampHistoryPanelBoardId) return;
+  _stampHistoryTargetId = _stampHistoryPanelBoardId;
+  _directStampFromHistory = true;
+  document.getElementById('direct-stamp-panel-title').textContent = '이력 직접 추가';
+  document.getElementById('direct-stamp-submit-btn').textContent = '추가';
+  document.getElementById('direct-stamp-edit-idx').value = '';
+  document.getElementById('direct-stamp-date').value = localDate();
+  document.getElementById('direct-stamp-comment').value = '';
+  closePanel('overlay-stamp-history');
+  openPanel('overlay-direct-stamp');
+}
+
+function editStampHistoryItem(boardId, origIdx) {
+  const boards = getStampBoards();
+  const board  = boards.find(b => b.id === boardId);
+  if (!board || !board.history) return;
+  const h = board.history[origIdx];
+  if (!h) return;
+  if (h.recordId) { showToast('관람 연동 항목은 수정할 수 없습니다'); return; }
+  _stampHistoryTargetId = boardId;
+  _directStampFromHistory = true;
+  document.getElementById('direct-stamp-panel-title').textContent = '이력 수정';
+  document.getElementById('direct-stamp-submit-btn').textContent = '수정';
+  document.getElementById('direct-stamp-edit-idx').value = origIdx;
+  document.getElementById('direct-stamp-date').value = h.date;
+  document.getElementById('direct-stamp-comment').value = h.comment || '';
+  closePanel('overlay-stamp-history');
+  openPanel('overlay-direct-stamp');
+}
+
+let _stampHistoryTargetId = null;
+
+function cancelDirectStamp() {
+  closePanel('overlay-direct-stamp');
+  if (_directStampFromHistory) openPanel('overlay-stamp-history');
+}
+
+function openAddStampHistoryDirect(boardId) {
+  _stampHistoryTargetId = boardId;
+  document.getElementById('direct-stamp-panel-title').textContent = '이력 직접 추가';
+  document.getElementById('direct-stamp-submit-btn').textContent = '추가';
+  document.getElementById('direct-stamp-edit-idx').value = '';
+  document.getElementById('direct-stamp-date').value = localDate();
+  document.getElementById('direct-stamp-comment').value = '';
+  openPanel('overlay-direct-stamp');
+}
+
+function saveDirectStampHistory() {
+  const boardId    = _stampHistoryTargetId;
+  const date       = document.getElementById('direct-stamp-date').value;
+  const comment    = document.getElementById('direct-stamp-comment').value.trim();
+  const editIdxStr = document.getElementById('direct-stamp-edit-idx').value;
+  const editIdx    = editIdxStr !== '' ? parseInt(editIdxStr) : null;
+  if (!date) { showToast('날짜를 입력해주세요'); return; }
+  const boards = getStampBoards();
+  const board  = boards.find(b => b.id === boardId);
+  if (!board) return;
+  let toast;
+  if (editIdx !== null) {
+    if (!board.history || !board.history[editIdx]) return;
+    board.history[editIdx].date    = date;
+    board.history[editIdx].comment = comment;
+    toast = '이력이 수정되었습니다';
+  } else {
+    if (!board.history) board.history = [];
+    board.history.push({ date, method: '직접 입력', comment, qty: 1 });
+    toast = '이력이 추가되었습니다';
+    recalcStampCount(board);
+    (board.milestones||[]).forEach(m => {
+      if (board.currentCount >= m.at && !m.notified) {
+        m.notified = true;
+        toast = '◆ ' + m.reward + ' 달성!';
+      }
+    });
+  }
+  recalcStampCount(board);
+  saveStampBoards(boards);
+  closePanel('overlay-direct-stamp');
+  if (_directStampFromHistory) { _directStampFromHistory = false; openPanel('overlay-stamp-history'); }
+  renderStampBoards();
+  renderCouponList();
+  renderHome();
+  if (_stampHistoryPanelBoardId === boardId) renderStampHistoryPanel();
+  showToast(toast);
+}
+
+function deleteStampHistoryItemFromPanel(boardId, origIdx) {
+  if (!confirm('이 이력을 삭제하시겠습니까?\n연동된 관람 기록의 도장판 연동도 해제됩니다.')) return;
+  const boards = getStampBoards();
+  const board  = boards.find(b => b.id === boardId);
+  if (!board || !board.history) return;
+  const h = board.history[origIdx];
+  board.history.splice(origIdx, 1);
+  recalcStampCount(board);
+  revalidateMilestones(board);
+  saveStampBoards(boards);
+  if (h) {
+    const records = getRecords();
+    // recordId 우선 매칭, 없으면 date 폴백
+    const target = records.find(r =>
+      r.stampBoardId === boardId && (h.recordId ? r.id === h.recordId : r.date === h.date)
+    );
+    if (target) { target.stampBoardId = null; target.stampQty = null; saveRecords(records); }
+  }
+  renderStampBoards();
+  renderCouponList();
+  renderHome();
+  renderStampHistoryPanel();
+  showToast('이력이 삭제되었습니다');
+}
+
+
+// 교신일지 이력 직접 삭제 (연동 record의 stampBoardId도 해제)
+function deleteStampHistoryItem(boardId, origIdx) {
+  if (!confirm('이 이력을 삭제하시겠습니까?\n연동된 관람 기록의 도장판 연동도 해제됩니다.')) return;
+  const boards = getStampBoards();
+  const board  = boards.find(b => b.id === boardId);
+  if (!board || !board.history) return;
+  const h = board.history[origIdx];
+  board.history.splice(origIdx, 1);
+  recalcStampCount(board);
+  revalidateMilestones(board); // 칸 줄었을 때만 notified 재검사
+  saveStampBoards(boards);
+  // 연동 record 해제
+  if (h) {
+    const records = getRecords();
+    // recordId 우선 매칭, 없으면 date 폴백
+    const target = records.find(r =>
+      r.stampBoardId === boardId && (h.recordId ? r.id === h.recordId : r.date === h.date)
+    );
+    if (target) { target.stampBoardId = null; target.stampQty = null; saveRecords(records); }
+  }
+  renderStampBoards();
+  renderCouponList();
+  renderHome();
+  showToast('이력이 삭제되었습니다');
+}
+
+function openAddStampBoard() {
+  document.getElementById('stamp-name').value = '';
+  openPanel('overlay-stamp');
+}
+
+function saveStampBoard() {
+  const nameInput = document.getElementById('stamp-name').value.trim();
+  const boards = getStampBoards();
+  // 이름 자동 부여: 기존 이름 중 숫자 최댓값+1 (삭제 후 재추가 시 중복 방지)
+  const maxNum = boards.reduce((max, b) => {
+    const n = parseInt(b.name);
+    return (!isNaN(n) && n > max) ? n : max;
+  }, 0);
+  const name = nameInput || String(maxNum + 1);
+  // 칸수/보상/milestones 고정
+  boards.push({
+    id: uuid(),
+    name,
+    totalSlots: 7,
+    reward: '미니CD + 포토북',
+    milestones: [
+      { at: 3, reward: '40% 할인권 ×2', couponKey: 'discount40', qty: 2, notified: false },
+      { at: 5, reward: '📸 폴라로이드', couponKey: null, notified: false },
+      { at: 7, reward: '50% 할인권 + 미니CD + 포토북', couponKey: 'discount50', qty: 1, notified: false }
+    ],
+    currentCount: 0,
+    history: []
+  });
+  saveStampBoards(boards);
+  closePanel('overlay-stamp');
+  populateStampSelect(); // 기록 폼 select 갱신 (T5)
+  showToast('도장판이 추가되었습니다');
+  renderStampBoards();
+}
+
+function renameStampBoard(id) {
+  const boards = getStampBoards();
+  const board  = boards.find(b => b.id === id);
+  if (!board) return;
+  const newName = prompt('새 이름을 입력하세요', board.name);
+  if (newName !== null && newName.trim()) {
+    board.name = newName.trim();
+    saveStampBoards(boards);
+    renderStampBoards();
+  }
+}
+
+function deleteStampBoard(id) {
+  if (!confirm('이 도장판을 삭제하시겠습니까?')) return;
+  saveStampBoards(getStampBoards().filter(b=>b.id!==id));
+  // 해당 도장판에 연동된 기록의 stampBoardId 해제
+  const records = getRecords();
+  let changed = false;
+  records.forEach(r => { if (r.stampBoardId === id) { r.stampBoardId = null; changed = true; } });
+  if (changed) saveRecords(records);
+  showToast('도장판이 삭제되었습니다');
+  renderStampBoards();
+  renderCouponList();
+  renderHome();
+}
+
+function togglePauseStampBoard(id) {
+  const boards = getStampBoards();
+  const board  = boards.find(b => b.id === id);
+  if (!board) return;
+  board.paused = !board.paused;
+  saveStampBoards(boards);
+  renderStampBoards();
+  showToast(board.paused ? '도장판이 일시정지되었습니다' : '도장판이 재개되었습니다');
+}
+
+function openAddStamp(boardId) {
+  document.getElementById('stamp-board-id').value = boardId;
+  document.querySelector('input[name="stamp-method"][value="직접 관람"]').checked = true;
+  const qtyEl = document.querySelector('input[name="stamp-qty"][value="1"]');
+  if (qtyEl) qtyEl.checked = true;
+  const dateEl = document.getElementById('stamp-date');
+  if (dateEl) dateEl.value = localDate();
+  const commentEl = document.getElementById('stamp-comment');
+  if (commentEl) commentEl.value = '';
+  const exchangeMemoEl = document.getElementById('stamp-exchange-memo');
+  if (exchangeMemoEl) exchangeMemoEl.value = '';
+  updateQtyLabel();
+  updateStampSessionOptions();
+  openPanel('overlay-add-stamp');
+}
+
+function updateQtyLabel() {
+  const checked = document.querySelector('input[name="stamp-qty"]:checked');
+  if (!checked) return;
+  const qty = checked.value;
+  [1,2,3].forEach(n => {
+    const label = document.getElementById('qty-label-'+n);
+    if (!label) return;
+    const active = String(n) === qty;
+    label.style.borderColor = active ? 'var(--accent)' : 'var(--border)';
+    label.style.color       = active ? 'var(--accent)' : '';
+    label.style.fontWeight  = active ? '700' : '';
+  });
+}
+
+function updateStampSessionOptions() {
+  const method    = document.querySelector('input[name="stamp-method"]:checked')?.value;
+  const date      = document.getElementById('stamp-date')?.value;
+  const group     = document.getElementById('stamp-session-group');
+  const container = document.getElementById('stamp-session-options');
+  // 교환 방식 메모 표시
+  const exchangeMemoGroup = document.getElementById('stamp-exchange-memo-group');
+  if (exchangeMemoGroup) exchangeMemoGroup.style.display = method === '교환' ? '' : 'none';
+  if (!group || !container) return;
+
+  if (!date) { group.style.display = 'none'; return; }
+  const sessions = getSchedule().filter(s => s.date === date);
+  if (!sessions.length || method !== '직접 관람') { group.style.display = 'none'; return; }
+
+  group.style.display = '';
+  container.innerHTML = sessions.map(s => {
+    const dn = s.time <= '16:00' ? '낮' : '밤';
+    const autoChecked = sessions.length === 1 ? 'checked' : '';
+    return `<label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;font-size:13px;">
+      <input type="radio" name="stamp-session" value="${dn}" ${autoChecked}> ${dn}
+    </label>`;
+  }).join('');
+}
+
+// 공통 도장 적용 함수 — addStamp()와 saveRecord() 양쪽에서 사용
+// returns: toastMsg string
+// ── 공통: history 기반 currentCount 재계산 ──────────────────
+function recalcStampCount(board) {
+  // qty 필드 기준으로만 계산 (calcStampCounts와 동일한 로직)
+  // method의 ×N 파싱은 제거 — qty 없으면 1로 통일
+  board.currentCount = (board.history || []).reduce((t, h) => t + (h.qty ?? 1), 0);
+  // notified는 여기서 건드리지 않음 — applyStamp/delete 시에만 재검사
+}
+
+// 삭제 후 마일스톤 notified 재검사 (칸이 줄었을 때만 호출)
+function revalidateMilestones(board) {
+  (board.milestones || []).forEach(m => {
+    if (board.currentCount < m.at) m.notified = false;
+  });
+}
+
+function applyStampToBoard(boardId, qty, date, historyComment, comment) {
+  const boards = getStampBoards();
+  const board  = boards.find(b => b.id === boardId);
+  if (!board) return null;
+
+  recalcStampCount(board);
+  if (board.currentCount >= board.totalSlots) return '이미 완성된 도장판입니다';
+
+  const remaining = board.totalSlots - board.currentCount;
+  const actualQty = Math.min(qty, remaining);
+
+  if (!board.history) board.history = [];
+  const qtyLabel = actualQty > 1 ? ' ×' + actualQty : '';
+  board.history.push({ date, method: historyComment + qtyLabel, comment: comment || '', qty: actualQty });
+  recalcStampCount(board);
+
+  if (!board.milestones) board.milestones = [
+    { at:3, reward:'40% 할인권 ×2', couponKey:'discount40', qty:2, notified:false },
+    { at:5, reward:'📸 폴라로이드', couponKey:null, notified:false },
+    { at:7, reward:'50% 할인권 + 미니CD + 포토북', couponKey:'discount50', qty:1, notified:false }
+  ];
+  let toastMsg = '도장 ' + actualQty + '개 완료 (' + board.currentCount + '/' + board.totalSlots + ')';
+  board.milestones.forEach(m => {
+    if (board.currentCount >= m.at && !m.notified) {
+      m.notified = true;
+      toastMsg = (m.couponKey ? '🏷 ' : '') + m.reward + ' 달성!';
+    }
+  });
+
+  if (board.currentCount >= board.totalSlots) {
+    toastMsg = '★ 다관람 카드 완성! ' + (board.reward||'');
+    if (actualQty < qty) toastMsg += ' (' + (qty - actualQty) + '개 초과분 제외)';
+  }
+
+  saveStampBoards(boards);
+  return toastMsg;
+}
+
+
+function addStamp() {
+  const boardId   = document.getElementById('stamp-board-id').value;
+  const method    = document.querySelector('input[name="stamp-method"]:checked').value;
+  const qtyEl     = document.querySelector('input[name="stamp-qty"]:checked');
+  const qty       = qtyEl ? parseInt(qtyEl.value) || 1 : 1;
+  const dateEl    = document.getElementById('stamp-date');
+  const date      = dateEl && dateEl.value ? dateEl.value : localDate();
+  const sessionEl = document.querySelector('input[name="stamp-session"]:checked');
+  const fullMethod = sessionEl ? `${method} (${sessionEl.value})` : method;
+  const exchangeMemo = document.getElementById('stamp-exchange-memo')?.value.trim() || '';
+  const commentRaw   = document.getElementById('stamp-comment')?.value.trim() || '';
+  const comment = exchangeMemo ? (commentRaw ? `${exchangeMemo} / ${commentRaw}` : exchangeMemo) : commentRaw;
+
+  const toastMsg = applyStampToBoard(boardId, qty, date, fullMethod, comment);
+  if (!toastMsg) return;
+  closePanel('overlay-add-stamp');
+  showToast(toastMsg);
+  renderStampBoards();
+  renderCouponList();
+  renderHome();
+  if (_directStampFromHistory) {
+    _directStampFromHistory = false;
+    renderStampHistoryPanel();
+    openPanel('overlay-stamp-history');
+  }
+}
+
+// ---- COUPON ----
+
+// 할인권종 → 쿠폰 키 매핑
+const DISCOUNT_COUPON_MAP = {
+  '40% 할인권': 'discount40',
+  '50% 할인권': 'discount50',
+  '증빙패스': 'discountPass'
+};
+const DISCOUNT_LABEL = {
+  '40% 할인권': '40% 할인권',
+  '50% 할인권': '50% 할인권',
+  '증빙패스': '증빙패스',
+  '프리뷰 할인': '프리뷰 할인',
+  '타임세일': '타임세일',
+  '조기예매 할인': '조기예매 할인 (20%)',
+  '재관람 할인': '재관람 할인 (30%)',
+  'MJ Starfish 할인': 'MJ Starfish 할인 (25%)',
+  '마티네': '마티네 (30%)',
+  '장애인/국가유공자': '장애인/국가유공자 (50%)',
+  '기타': '기타'
+};
+
+function onDiscountTypeChange() {
+  const val = document.getElementById('rec-discount-type').value;
+  const warn = document.getElementById('rec-discount-warn');
+  const couponKey = DISCOUNT_COUPON_MAP[val];
+  if (couponKey) {
+    const coupons = getCoupons();
+    const boards  = getStampBoards();
+    const records = getRecords();
+    const avail   = calcCouponCount(couponKey, coupons, boards, records);
+    warn.style.display = avail <= 0 ? '' : 'none';
+  } else {
+    warn.style.display = 'none';
+  }
+}
+
+function onRecStampBoardChange() {
+  const val = document.getElementById('rec-stamp-board').value;
+  const qtyGroup = document.getElementById('rec-stamp-qty-group');
+  if (qtyGroup) qtyGroup.style.display = val ? '' : 'none';
+  if (!val) {
+    const r1 = document.querySelector('input[name="rec-stamp-qty"][value="1"]');
+    if (r1) { r1.checked = true; updateRecQtyLabel(); }
+  }
+}
+
+function updateRecQtyLabel() {
+  const checked = document.querySelector('input[name="rec-stamp-qty"]:checked');
+  if (!checked) return;
+  const qty = checked.value;
+  [1,2,3].forEach(n => {
+    const label = document.getElementById('rec-qty-label-' + n);
+    if (!label) return;
+    const active = String(n) === qty;
+    label.style.borderColor = active ? 'var(--accent)' : 'var(--border)';
+    label.style.color       = active ? 'var(--accent)' : '';
+    label.style.fontWeight  = active ? '700' : '';
+  });
+}
+
+function openAddStampBoardFromRecord() {
+  document.getElementById('stamp-name').value = '';
+  openPanel('overlay-stamp');
+}
+
+
+let _couponHistoryKey = '';
+
+const COUPON_ITEMS = [
+  { key:'discount40',   label:'40% 할인권', short:'40%' },
+  { key:'discount50',   label:'50% 할인권', short:'50%' },
+  { key:'discountPass', label:'증빙패스',   short:'증빙' }
+];
+
+// 도장 달성 보상을 도장판 상태에서 실시간 계산
+// asOf: 날짜 기준 (잔여=오늘, 최종=미래포함 전체)
+function calcCouponCount(key, coupons, boards, records, asOf) {
+  records = records || getRecords();
+  if (!coupons[key]) coupons[key] = { count: 0, history: [] };
+  // ① 수동 이력 (쿠폰팩, 수동 추가/차감) — 날짜 필터 적용
+  const manual = (coupons[key].history || []).reduce((sum, h) => {
+    if (asOf && h.date > asOf) return sum;
+    if (h.type === '획득' || h.type === '복원') return sum + (h.qty || 1);
+    if (h.type === '사용') return sum - (h.qty || 1);
+    return sum;
+  }, 0);
+  // ② 도장판 milestone 달성분 — asOf 기준으로 달성 날짜 체크
+  const stampBonus = boards.reduce((sum, b) => {
+    return sum + (b.milestones || []).filter(m => {
+      if (m.couponKey !== key || !m.notified) return false;
+      if (!asOf) return true;
+      const achievedDate = getStampAchievedDate(b, m.at);
+      return achievedDate && achievedDate <= asOf;
+    }).reduce((s, m) => s + (m.qty || 1), 0);
+  }, 0);
+  // ③ 관람 기록 할인권 사용분 — asOf 기준 날짜만 차감
+  const used = records.filter(r =>
+    (DISCOUNT_COUPON_MAP[r.discountType] || null) === key &&
+    (!asOf || r.date <= asOf)
+  ).length;
+  return Math.max(0, manual + stampBonus - used);
+}
+
+// 도장판에서 milestone 달성 날짜 추출 (history 누적합이 at에 도달한 시점)
+function getStampAchievedDate(board, at) {
+  const sorted = [...(board.history || [])].sort((a, b) => a.date.localeCompare(b.date));
+  let cumul = 0;
+  for (const h of sorted) {
+    cumul += (h.qty || 1);
+    if (cumul >= at) return h.date;
+  }
+  return sorted[sorted.length - 1]?.date || '';
+}
+
+function renderCouponList() {
+  const coupons = getCoupons();
+  const boards  = getStampBoards();
+  const records = getRecords();
+  const today   = localDate();
+
+  // 이력 접힘 상태 복원 (디폴트: 접힘)
+  const histCollapsed = DB.get('couponHistoryCollapsed', true);
+  const histWrap = document.getElementById('coupon-history-wrap');
+  const histIcon = document.getElementById('coupon-history-toggle-icon');
+  if (histWrap) histWrap.style.display = histCollapsed ? 'none' : '';
+  if (histIcon) histIcon.textContent   = histCollapsed ? '▼' : '▲';
+
+  // 최종 = 날짜 제한 없이 전체 + 미달성 milestone
+  function calcFinal(key) {
+    const allUsed = calcCouponCount(key, coupons, boards, records);
+    // 입력된 도장 총합(날짜 무관)이 milestone.at 이상인 경우만 future로 카운트
+    const future = boards.reduce((sum, b) => {
+      const totalEntered = (b.history||[]).reduce((t, h) => t + (h.qty||1), 0);
+      return sum + (b.milestones||[]).filter(m =>
+        m.couponKey === key && !m.notified && totalEntered >= m.at
+      ).reduce((s, m) => s + (m.qty || 1), 0);
+    }, 0);
+    return allUsed + future;
+  }
+
+  const cardsHtml = `<div class="coupon-cards">${COUPON_ITEMS.map(item => {
+    const cur   = calcCouponCount(item.key, coupons, boards, records, today); // 오늘까지 기준
+    const final = calcFinal(item.key);                                         // 전체 기준
+    // 최종 기준 적립/사용 합산
+    const earned = (coupons[item.key].history||[]).filter(h=>h.type==='획득'||h.type==='복원').reduce((s,h)=>s+(h.qty||1),0)
+      + boards.reduce((s,b)=>s+(b.milestones||[]).filter(m=>m.couponKey===item.key&&m.notified).reduce((t,m)=>t+(m.qty||1),0),0);
+    const used   = records.filter(r=>(DISCOUNT_COUPON_MAP[r.discountType]||null)===item.key).length
+      + (coupons[item.key].history||[]).filter(h=>h.type==='사용').reduce((s,h)=>s+(h.qty||1),0);
+    return `<div class="coupon-card">
+      <div class="coupon-card-label">${item.label}</div>
+      <div class="coupon-card-sub-row">
+        <div class="coupon-card-sub">현재</div>
+        <div class="coupon-card-sub">최종</div>
+      </div>
+      <div class="coupon-card-num-row">
+        <div class="coupon-card-num">${cur}</div>
+        <div class="coupon-card-num final">${final}</div>
+      </div>
+      <div style="font-size:10px;color:var(--text3);text-align:center;margin-top:4px;">적립 ${earned} · 사용 ${used}</div>
+    </div>`;
+  }).join('')}</div>`;
+
+  document.getElementById('coupon-list').innerHTML = cardsHtml;
+  renderCouponAllHistory();
+}
+
+function renderCouponAllHistory() {
+  const coupons = getCoupons();
+  const boards  = getStampBoards();
+  const records = getRecords();
+  const allRows = [];
+  const dow = ['일','월','화','수','목','금','토'];
+
+  // ① 수동 이력 (획득/사용 — 복원·구 달성 보상·관람 연동 사용은 표시 안 함)
+  COUPON_ITEMS.forEach(item => {
+    (coupons[item.key].history || []).forEach((h, idx) => {
+      if (h.type === '복원') return;
+      if (h.comment && (h.comment.includes('달성 보상') || h.comment.includes('칸 달성'))) return;
+      if (h.type === '사용' && h.comment && h.comment.includes('관람 사용')) return;
+      allRows.push({ ...h, key: item.key, short: item.short, originalIdx: idx, rowType: 'manual' });
+    });
+  });
+
+  // ② 도장 달성 보상 — 도장판 notified 상태에서 동적 생성 (삭제 불가)
+  boards.forEach(b => {
+    (b.milestones || []).forEach(m => {
+      if (!m.notified) return;
+      const key = m.couponKey;
+      if (!key) return; // 쿠폰 미연동 마일스톤 (폴라로이드 등) 스킵
+      const item = COUPON_ITEMS.find(i => i.key === key);
+      if (!item) return;
+      const date = getStampAchievedDate(b, m.at);
+      allRows.push({
+        date, type: '획득', key, short: item.short,
+        comment: `[🎫 ${b.name}] ${m.at}칸 달성`,
+        isMilestone: true, qty: 1, originalIdx: -1, rowType: 'milestone'
+      });
+    });
+  });
+
+  // ③ 관람 기록 할인권 사용분 — records에서 동적 생성 (삭제 불가)
+  records.forEach(r => {
+    const key = DISCOUNT_COUPON_MAP[r.discountType] || null;
+    if (!key) return;
+    const item = COUPON_ITEMS.find(i => i.key === key);
+    if (!item) return;
+    allRows.push({
+      date: r.date, type: '사용', key, short: item.short,
+      comment: `${r.alex} · ${r.philo} 관람`,
+      qty: 1, originalIdx: -1, rowType: 'record'
+    });
+  });
+
+  allRows.sort((a, b) => a.date.localeCompare(b.date));
+
+  const el = document.getElementById('coupon-all-history');
+  if (!el) return;
+  if (!allRows.length) {
+    el.innerHTML = '<div style="color:var(--text3);font-size:13px;padding:12px;text-align:center;">이력 없음</div>';
+    return;
+  }
+
+  const rows = allRows.map(h => {
+    const d = new Date(h.date + 'T00:00:00');
+    const dateStr = `${parseInt(h.date.slice(5,7))}.${parseInt(h.date.slice(8,10))}(${dow[d.getDay()]})`;
+    const isGet = h.type === '획득';
+    const typeHtml = isGet
+      ? `<span class="hist-type-get">획득</span>`
+      : `<span class="hist-type-use">사용</span>`;
+    const qty   = h.qty || 1;
+    const delta = isGet ? `<span class="hist-delta-pos">+${qty}</span>` : `<span class="hist-delta-neg">-${qty}</span>`;
+    const d40   = h.key === 'discount40'   ? delta : '';
+    const d50   = h.key === 'discount50'   ? delta : '';
+    const dPass = h.key === 'discountPass' ? delta : '';
+    const milestoneBadge = h.isMilestone ? `<span class="hist-milestone-badge">달성</span>` : '';
+    const memo  = `${h.comment || ''}${milestoneBadge}`;
+    const delBtn = h.rowType === 'manual'
+      ? `<button class="hist-del-btn" onclick="deleteCouponHistoryRow('${h.key}',${h.originalIdx})">✕</button>`
+      : '';
+    return `<tr>
+      <td style="text-align:left;white-space:nowrap;">${dateStr}</td>
+      <td>${typeHtml}</td>
+      <td>${d40}</td><td>${d50}</td><td>${dPass}</td>
+      <td style="text-align:left;color:var(--text2);font-size:11px;">${memo}</td>
+      <td>${delBtn}</td>
+    </tr>`;
+  }).join('');
+
+  el.innerHTML = `<table class="coupon-hist-table">
+    <thead><tr>
+      <th style="text-align:center;">날짜</th><th>유형</th><th>40%</th><th>50%</th><th>증빙</th><th style="text-align:center;">메모</th><th></th>
+    </tr></thead>
+    <tbody>${rows}</tbody>
+  </table>`;
+}
+
+function deleteCouponHistoryRow(key, originalIdx) {
+  if (!confirm('이 이력을 삭제하시겠습니까?')) return;
+  const coupons = getCoupons();
+  coupons[key].history.splice(originalIdx, 1);
+  // count는 renderCouponList에서 calcCouponCount로 실시간 계산하므로 별도 저장 불필요
+  // 하지만 getCoupons()의 count 필드도 맞춰둠
+  const boards = getStampBoards();
+  coupons[key].count = calcCouponCount(key, coupons, boards);
+  saveCoupons(coupons);
+  renderCouponList();
+  renderHome();
+  showToast('이력이 삭제되었습니다');
+}
+
+function openAddCouponManual() {
+  document.getElementById('manual-coupon-key').value = 'discount40';
+  document.querySelector('input[name="manual-coupon-type"][value="획득"]').checked = true;
+  document.querySelector('input[name="manual-coupon-qty"][value="1"]').checked = true;
+  document.getElementById('manual-coupon-date').value = localDate();
+  document.getElementById('manual-coupon-comment').value = '';
+  updateManualTypeLabel();
+  updateManualQtyLabel();
+  openPanel('overlay-coupon-manual');
+}
+
+function updateManualTypeLabel() {
+  const val = document.querySelector('input[name="manual-coupon-type"]:checked')?.value;
+  ['획득','사용','복원'].forEach(v => {
+    const el = document.getElementById('manual-type-label-'+v);
+    if (!el) return;
+    const active = v === val;
+    el.style.borderColor = active ? 'var(--accent)' : 'var(--border)';
+    el.style.color       = active ? 'var(--accent)' : '';
+    el.style.fontWeight  = active ? '700' : '';
+  });
+}
+
+function updateManualQtyLabel() {
+  const val = document.querySelector('input[name="manual-coupon-qty"]:checked')?.value;
+  [1,2,3].forEach(n => {
+    const el = document.getElementById('manual-qty-label-'+n);
+    if (!el) return;
+    const active = String(n) === val;
+    el.style.borderColor = active ? 'var(--accent)' : 'var(--border)';
+    el.style.color       = active ? 'var(--accent)' : '';
+    el.style.fontWeight  = active ? '700' : '';
+  });
+}
+
+function saveManualCoupon() {
+  const key     = document.getElementById('manual-coupon-key').value;
+  const type    = document.querySelector('input[name="manual-coupon-type"]:checked').value;
+  const qty     = parseInt(document.querySelector('input[name="manual-coupon-qty"]:checked').value) || 1;
+  const date    = document.getElementById('manual-coupon-date').value;
+  const comment = document.getElementById('manual-coupon-comment').value.trim();
+  if (!date) { showToast('날짜를 입력해주세요'); return; }
+
+  const coupons = getCoupons();
+  if (!coupons[key].history) coupons[key].history = [];
+  coupons[key].history.push({ type, date, comment: comment || type, qty });
+  // count 필드는 calcCouponCount()로 실시간 계산하므로 별도 관리 불필요
+  // (하위 호환성만 유지)
+  saveCoupons(coupons);
+  closePanel('overlay-coupon-manual');
+  renderCouponList();
+  renderHome();
+  showToast(`${COUPON_ITEMS.find(i=>i.key===key)?.label} ${type} ${qty}개 완료`);
+}
+
+// ============================================================
+// SETTINGS
+// ============================================================
+function toggleDark() {
+  const s = getSettings(); s.darkMode=!s.darkMode; saveSettings(s); applyDark(s.darkMode);
+}
+function applyDark(on) {
+  document.documentElement.setAttribute('data-theme', on?'dark':'light');
+  const btn = document.getElementById('dark-toggle');
+  if (on) btn.classList.add('on'); else btn.classList.remove('on');
+}
+
+function exportData() {
+  const data = {
+    records:     getRecords(),
+    schedule:    getSchedule(),
+    events:      getEvents(),
+    stampBoards: getStampBoards(),
+    coupons:     getCoupons(),
+    settings:    getSettings()
+  };
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
+  a.download = `sachan_backup_${localDate()}.json`;
+  a.click();
+  showToast('백업 파일이 다운로드되었습니다');
+}
+
+function importData(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      if (data.records)     saveRecords(data.records);
+      if (data.schedule)    saveSchedule(data.schedule);
+      if (data.events)      saveEvents(data.events);
+      if (data.stampBoards) saveStampBoards(data.stampBoards);
+      if (data.coupons)     saveCoupons(data.coupons);
+      if (data.settings)  { saveSettings(data.settings); applyDark(data.settings.darkMode); }
+      showToast('데이터를 성공적으로 불러왔습니다');
+      renderHome();
+      renderCalendar();
+      renderCoupon();
+      renderStats();
+    } catch { showToast('파일 형식 오류'); }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+// ============================================================
+// REFRESH
+// ============================================================
+function refreshCurrentPage() {
+  const id = document.querySelector('.page.active')?.id;
+  if (id==='page-home')     renderHome();
+  if (id==='page-calendar') renderCalendar();
+  if (id==='page-stats')    renderStats();
+  if (id==='page-coupon')   renderCoupon();
+}
+
+// ============================================================
+// INIT
+// ============================================================
+function migrateData() {
+  // 구 데이터 호환: history에 저장된 달성 보상 / 복원 / 관람 연동 사용 항목 제거
+  // (notified 기반 동적 생성 + records 기반 동적 생성 방식으로 전환됐으므로 중복 방지)
+  const coupons = getCoupons();
+  let changed = false;
+  ['discount40','discount50','discountPass'].forEach(key => {
+    if (!coupons[key]?.history) return;
+    const before = coupons[key].history.length;
+    coupons[key].history = coupons[key].history.filter(h => {
+      if (h.type === '복원') return false;
+      if (h.comment && (h.comment.includes('달성 보상') || h.comment.includes('칸 달성'))) return false;
+      // 관람 연동으로 자동 생성된 사용 항목 (예: "고상호×이한솔 관람 사용")
+      if (h.type === '사용' && h.comment && h.comment.includes('관람 사용')) return false;
+      return true;
+    });
+    if (coupons[key].history.length !== before) changed = true;
+  });
+  if (changed) saveCoupons(coupons);
+}
+
+function init() {
+  const s = getSettings();
+  applyDark(s.darkMode);
+  migrateData();
+  initCal();
+  renderHome();
+
+  // 스케줄 자동 fetch (온라인이면 최신, 오프라인이면 캐시)
+  fetchSchedule(false);
+  fetchEvents(false);
+
+  // Service Worker 등록
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js')
+      .then(() => console.log('SW registered'))
+      .catch(e => console.log('SW failed:', e));
+  }
+
+  // 설정 탭 업데이트 시간 표시
+  const savedAt = localStorage.getItem('scheduleUpdatedAt');
+  const timeEl  = document.getElementById('schedule-update-time');
+  if (timeEl && savedAt) timeEl.textContent = savedAt + ' (캐시)';
+}
+init();
+</script>
+</body>
+</html>
