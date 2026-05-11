@@ -2003,22 +2003,25 @@ function toggleMoneyBlur() {
 function renderStats() {
   const records  = getRecords();
   const schedule = getSchedule();
-  const sky  = ['김우진','김우진','김우진'];
-  const philo = ['윤심덕','윤심덕','윤심덕'];
+  const sky  = ['온주완','이진혁','임준혁','선한국'];
+  const philo = ['정우연','여은','최연우','김수연'];
+  const third = ['원태민','유현석','김지온','김찬종'];
   const countAct = (f,n) => records.filter(r=>r[f]===n).length;
   const countSch = (f,n) => schedule.filter(s=>s[f]===n).length;
-
-  let ah = `<tr><th colspan="3" class="role-section-title">김우진</th></tr><tr><th>배우</th><th>총 회차</th><th>관람</th></tr>`;
+let ah = `<tr><th colspan="3" class="role-section-title">김우진</th></tr><tr><th>배우</th><th>총 회차</th><th>관람</th></tr>`;
   sky.forEach(a  => { ah += `<tr><td>${a}</td><td style="color:var(--text3)">${countSch('alex',a)}</td><td>${countAct('alex',a)}</td></tr>`; });
   ah += `<tr><th colspan="3" class="role-section-title">윤심덕</th></tr><tr><th>배우</th><th>총 회차</th><th>관람</th></tr>`;
   philo.forEach(a => { ah += `<tr><td>${a}</td><td style="color:var(--text3)">${countSch('philo',a)}</td><td>${countAct('philo',a)}</td></tr>`; });
+  ah += `<tr><th colspan="3" class="role-section-title">사내</th></tr><tr><th>배우</th><th>총 회차</th><th>관람</th></tr>`;
+  third.forEach(a => { ah += `<tr><td>${a}</td><td style="color:var(--text3)">${countSch('third',a)}</td><td>${countAct('third',a)}</td></tr>`; });
   document.getElementById('stats-actors').innerHTML = ah;
-
   const pairs = [
-    ['김우진','윤심덕'],['김우진','윤심덕'],['김우진','윤심덕'],
-    ['김우진','윤심덕'],['김우진','윤심덕'],['김우진','윤심덕'],
-    ['김우진','윤심덕'],['김우진','윤심덕'],['김우진','윤심덕']
+    ['온주완','정우연'],['온주완','여은'],['온주완','최연우'],['온주완','김수연'],
+    ['이진혁','정우연'],['이진혁','여은'],['이진혁','최연우'],['이진혁','김수연'],
+    ['임준혁','정우연'],['임준혁','여은'],['임준혁','최연우'],['임준혁','김수연'],
+    ['선한국','정우연'],['선한국','여은'],['선한국','최연우'],['선한국','김수연']
   ];
+  let ph = '<tr><th>김우진</th><th>윤심덕</th><th>총 회차</th><th>관람</th></tr>';
   let ph = '<tr><th>김우진</th><th>윤심덕</th><th>총 회차</th><th>관람</th></tr>';
   pairs.forEach(([s,d]) => {
     const tot = schedule.filter(x=>x.alex===s&&x.philo===d).length;
