@@ -1,16 +1,13 @@
-const CACHE_NAME = 'outcasts2026-v3';
+const CACHE_NAME = 'outcasts2026-v5';
 const BASE = '/outcasts2026';
 
-// 앱 시작 시 캐시할 파일들
 const PRECACHE_URLS = [
-  BASE + '/',
-  BASE + '/index.html',
   BASE + '/manifest.json',
   BASE + '/icon-192.png',
   BASE + '/icon-512.png',
 ];
 
-// install: 기본 파일 캐시
+// install: 아이콘·매니페스트만 프리캐시 (index.html 제외)
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => cache.addAll(PRECACHE_URLS))
@@ -28,12 +25,14 @@ self.addEventListener('activate', event => {
   self.clients.claim();
 });
 
-// fetch: 네트워크 우선, 실패 시 캐시
+// fetch
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
 
-  // schedule.json — 네트워크 우선 (최신 스케줄), 실패 시 캐시
-  if (url.pathname.endsWith('schedule.json') || url.pathname.endsWith('events.json')) {
+  // index.html + schedule/events — 네트워크 우선, 실패 시 캐시
+  const isHtml = url.pathname.endsWith('index.html') || url.pathname === BASE + '/' || url.pathname === BASE;
+  const isData = url.pathname.endsWith('schedule.json') || url.pathname.endsWith('events.json');
+  if (isHtml || isData) {
     event.respondWith(
       fetch(event.request)
         .then(response => {
@@ -46,7 +45,7 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // 나머지 — 캐시 우선, 없으면 네트워크
+  // 나머지(아이콘 등) — 캐시 우선
   event.respondWith(
     caches.match(event.request).then(cached => {
       if (cached) return cached;
