@@ -2059,7 +2059,7 @@ function renderHeatmap() {
   });
   const cls = c => !c?'': c>=5?'v5':'v'+c;
   const rowKeys = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q'];
-  const C = 10, GAP = 1, LBL = 20, ZONE_GAP = 2;
+  const C = 10, GAP = 1, LBL = 14, ZONE_GAP = 4;
 
   let html = '<div style="display:flex;flex-direction:column;gap:2px;">';
 
@@ -2071,7 +2071,8 @@ function renderHeatmap() {
     <div style="width:${leftPad}px;text-align:right;font-size:9px;color:var(--text3);padding-right:2px;">좌 →</div>
     <div style="width:${ZONE_GAP}px;"></div>
     <div style="width:${midPad}px;text-align:center;font-size:9px;color:var(--text3);">중앙</div>
-    <div style="width:${ZONE_GAP + LBL}px;"></div>
+    <div style="width:${ZONE_GAP}px;"></div>
+    <div style="width:${LBL}px;"></div>
     <div style="width:${rightPad}px;text-align:center;font-size:9px;color:var(--text3);">우 →</div>
   </div>`;
 
