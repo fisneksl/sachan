@@ -2059,7 +2059,7 @@ function renderHeatmap() {
   });
   const cls = c => !c?'': c>=5?'v5':'v'+c;
   const rowKeys = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q'];
-  const C = 10, GAP = 1, LBL = 14, ZONE_GAP = 4;
+  const C = 10, GAP = 1, LBL = 14, ZONE_GAP = 8;
 
   let html = '<div style="display:flex;flex-direction:column;gap:2px;">';
 
@@ -2068,8 +2068,6 @@ function renderHeatmap() {
   const midPad   = MAX_MID * (C+GAP);
   const rightPad = MAX_RIGHT * (C+GAP);
   html += `<div style="display:flex;align-items:center;margin-bottom:2px;gap:${GAP}px;">
-    <div style="width:${leftPad}px;text-align:right;font-size:9px;color:var(--text3);padding-right:2px;">좌 →</div>
-    <div style="width:${ZONE_GAP}px;"></div>
     <div style="width:${midPad}px;text-align:center;font-size:9px;color:var(--text3);">중앙</div>
     <div style="width:${ZONE_GAP}px;"></div>
     <div style="width:${LBL}px;"></div>
@@ -2079,8 +2077,7 @@ function renderHeatmap() {
   rowKeys.forEach(r => {
     const cfg = SEAT_ROWS[r];
     html += `<div style="display:flex;gap:${GAP}px;align-items:center;">`;
-    // left seats (right-aligned)
-    for (let i = 0; i < MAX_LEFT - cfg.left; i++) html += `<div class="seat-cell" style="visibility:hidden;width:${C}px;height:${C}px;"></div>`;
+    // left seats
     for (let n = cfg.lStart; n < cfg.lStart + cfg.left; n++) {
       const k = `${r}-${n}`, cnt = seatMap[k]||0, c = cls(cnt);
       html += `<div class="seat-cell${c?' '+c:''}" style="width:${C}px;height:${C}px;" title="${r}열 ${n}번 ${cnt}회"></div>`;
