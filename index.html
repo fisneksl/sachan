@@ -2078,13 +2078,13 @@ function renderHeatmap() {
   rowKeys.forEach(r => {
     const cfg = SEAT_ROWS[r];
     html += `<div style="display:flex;gap:${GAP}px;align-items:center;">`;
-    // left padding
-    for (let i = 0; i < MAX_LEFT - cfg.left; i++) html += `<div class="seat-cell" style="visibility:hidden;width:${C}px;height:${C}px;"></div>`;
     // left seats
     for (let n = cfg.lStart; n < cfg.lStart + cfg.left; n++) {
       const k = `${r}-${n}`, cnt = seatMap[k]||0, c = cls(cnt);
       html += `<div class="seat-cell${c?' '+c:''}" style="width:${C}px;height:${C}px;" title="${r}열 ${n}번 ${cnt}회"></div>`;
     }
+    // left padding (right side)
+    for (let i = 0; i < MAX_LEFT - cfg.left; i++) html += `<div class="seat-cell" style="visibility:hidden;width:${C}px;height:${C}px;"></div>`;
     // zone gap
     html += `<div style="width:${ZONE_GAP}px;flex-shrink:0;"></div>`;
     // mid padding
