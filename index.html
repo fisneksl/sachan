@@ -986,13 +986,11 @@ function migrateStampBoards(boards) {
   return boards.map(b => {
     if (!b.milestones) {
       b.milestones = [
-        { at: 3, reward: '40% 할인권 ×2', couponKey: null, qty: 2, notified: b.currentCount >= 3 },
         { at: 5, reward: '📸 폴라로이드', couponKey: null, notified: b.currentCount >= 5 },
         { at: 7, reward: '50% 할인권 + 실황 OST', couponKey: 'discount50', qty: 1, notified: b.currentCount >= 7 }
       ];
     } else {
-      const at3 = b.milestones.find(m => m.at === 3);
-      if (at3 && at3.qty === undefined) at3.qty = 2;
+      b.milestones = b.milestones.filter(m => m.at !== 3);
       const at7 = b.milestones.find(m => m.at === 7);
       if (at7 && at7.qty === undefined) at7.qty = 1;
     }
@@ -1320,7 +1318,6 @@ function saveRecord() {
 
             // 마일스톤 달성 시 notified 설정 (쿠폰 count는 calcCouponCount()가 m.notified로 동적 계산)
             if (!newBoard.milestones) newBoard.milestones = [
-              { at:3, reward:'40% 할인권 ×2', couponKey:null, qty:2, notified:false },
               { at:5, reward:'📸 폴라로이드', couponKey:null, notified:false },
               { at:7, reward:'50% 할인권 + 실황 OST', couponKey:'discount50', qty:1, notified:false }
             ];
@@ -2265,9 +2262,8 @@ function renderStampBoards() {
     const { cur, final } = calcStampCounts(b);
     const pct        = Math.min(100, Math.round(cur / total * 100));
     const finalPct   = Math.min(100, Math.round(final / total * 100));
-    const mid3done   = cur >= 3;
     const alldone    = cur >= total;
-    const milestones = b.milestones || [{ at:3 }, { at:5 }, { at:7 }];
+    const milestones = (b.milestones || [{ at:5 }, { at:7 }]).filter(m => m.at !== 3);
     const nextMs     = [...milestones].sort((a,b2)=>a.at-b2.at).find(m => cur < m.at);
     const toNext     = nextMs ? nextMs.at - cur : null;
     const mid5done   = cur >= 5;
@@ -2276,11 +2272,8 @@ function renderStampBoards() {
     if (paused)               statusHtml = `<div class="stamp-status-row stamp-status-paused">일시정지 중</div>`;
     else if (alldone)         statusHtml = `<div class="stamp-status-row stamp-status-done">★ CD+포토북 달성!</div>`;
     else if (mid5done)        statusHtml = `<div class="stamp-status-row stamp-status-mid">📸 폴라로이드 달성!</div>`;
-    else if (mid3done)        statusHtml = `<div class="stamp-status-row stamp-status-mid">🏷 40%할인권×2 달성!</div>`;
     else if (toNext !== null) statusHtml = `<div class="stamp-status-row stamp-status-next">다음까지 ${toNext}개</div>`;
 
-    // progress markers for 3 milestones
-    const marker3 = (3 / total * 100).toFixed(2);
     const marker5 = (5 / total * 100).toFixed(2);
 
     return `<div class="stamp-board${paused ? ' paused' : ''}">
@@ -2300,7 +2293,6 @@ function renderStampBoards() {
         <div class="progress-bar" style="overflow:visible;">
           <div class="progress-fill" style="width:${finalPct}%;background:var(--border);border-radius:6px;"></div>
           <div class="progress-fill" style="width:${pct}%;background:${paused ? 'var(--text3)' : 'var(--accent)'};border-radius:6px;margin-top:-12px;position:relative;"></div>
-          <div class="progress-marker" style="left:calc(${marker3}% - 1px);"></div>
           <div class="progress-marker" style="left:calc(${marker5}% - 1px);background:var(--accent);"></div>
         </div>
       </div>
@@ -2521,7 +2513,6 @@ function saveStampBoard() {
     totalSlots: 7,
     reward: '실황 OST',
     milestones: [
-      { at: 3, reward: '40% 할인권 ×2', couponKey: null, qty: 2, notified: false },
       { at: 5, reward: '📸 폴라로이드', couponKey: null, notified: false },
       { at: 7, reward: '50% 할인권 + 실황 OST', couponKey: 'discount50', qty: 1, notified: false }
     ],
@@ -2659,7 +2650,6 @@ function applyStampToBoard(boardId, qty, date, historyComment, comment) {
   recalcStampCount(board);
 
   if (!board.milestones) board.milestones = [
-    { at:3, reward:'40% 할인권 ×2', couponKey:null, qty:2, notified:false },
     { at:5, reward:'📸 폴라로이드', couponKey:null, notified:false },
     { at:7, reward:'50% 할인권 + 실황 OST', couponKey:'discount50', qty:1, notified:false }
   ];
